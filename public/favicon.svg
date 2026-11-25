@@ -1,4 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="7" fill="#111216"/>
-  <path d="M10 9h12v3h-8.5v3.5h7v3h-7V23H10V9z" fill="#e5e7eb"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 108">
+  <defs>
+    <linearGradient id="g" x1="15%" y1="0%" x2="85%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="35%" stop-color="#F1D3FF" />
+      <stop offset="72%" stop-color="#C9BED6" />
+      <stop offset="100%" stop-color="#807E8A" />
+    </linearGradient>
+  </defs>
+  <rect width="100" height="108" rx="20" fill="#0D0C0F" />
+  <circle cx="50" cy="13.5" r="5" fill="url(#g)" />
+  <rect x="47.6" y="17.5" width="4.8" height="5" fill="url(#g)" />
+  <circle cx="50" cy="28" r="6" fill="none" stroke="url(#g)" stroke-width="3.4" />
+  <path
+    fill="url(#g)"
+    fill-rule="evenodd"
+    d="M 50 32.5 C 72 32.5, 86 44.5, 86 60.5 C 86 73.5, 74.5 83.8, 60.5 86.5 Q 64 93.8, 74 98 L 26 98 Q 36 93.8, 39.5 86.5 C 25.5 83.8, 14 73.5, 14 60.5 C 14 44.5, 28 32.5, 50 32.5 Z M 45 40 C 32.5 41.3, 24.5 49.8, 24.5 60.5 C 24.5 71, 32 78.8, 42.6 80.7 Q 44.5 63, 45 40 Z M 55 40 Q 55.5 63, 57.4 80.7 C 68 78.8, 75.5 71, 75.5 60.5 C 75.5 49.8, 67.5 41.3, 55 40 Z"
+  />
 </svg>

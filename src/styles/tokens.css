@@ -1,0 +1,78 @@
+/* ==========================================================================
+   fishka.ai — Color & Typography Contract
+   Derived from the BubbleForge / Neon Unicorn master set and ratified
+   against dotChat's color namespace spec.
+
+   Core Law:
+   A hue may mean exactly one thing within a namespace. Namespaces are
+   separated by visible walls.
+   ========================================================================== */
+
+:root {
+  /* ── Ground (Background Charcoals — architecture only) ── */
+  --canvas: #0d0c0f;     /* BF-Black: page floor & walled code/diagram viewports */
+  --inset: #141318;      /* BF-Charcoal: cards & inset panels — rgb(20, 19, 24) */
+  --panel: #1a181e;      /* BF-Graphite: primary surfaces & elevated cards */
+  --elevated: #25232a;   /* BF-Ash: raised surfaces, inline code bg */
+  --line-soft: #2e2c33;  /* BF-Gunmetal: soft borders & dotted leaders */
+  --line: #3a3842;       /* BF-Fog: structural borders & focus/hover frames */
+
+  /* ── Reading (Neutral ink ramp — never hue-tinted) ── */
+  --neutral: #e6e4ea;    /* Primary body prose (added beyond master set) */
+  --secondary: #b8b6c2;  /* BF-Silver: secondary reading & card summaries */
+  --meta: #807e8a;       /* BF-Feather: metadata, timestamps, inactive nav, [PLANNED] */
+  --muted: #6a6875;      /* BF-Smoke: ghost markdown punctuation, dim labels */
+  --faint: #514f5c;      /* BF-Mist: faint rules & dividers (not Aetheria Mist) */
+
+  /* ── Chrome (Pink is state + fixed brand identity ONLY; zero pink in prose) ── */
+  --chrome: #ff81c8;     /* Aetheria Pink (Core): active/selected state, brand mark */
+  --chrome-glow: rgba(255, 129, 200, 0.32);
+  --chrome-dim: #ffb3df; /* Aetheria Mist: demoted decorative pink */
+  --bloom: #ff4fa3;      /* Aetheria Bloom: danger / destructive */
+
+  /* ── Prose Headers (Single-hue Lavender ramp — bright to soft, not rainbow) ── */
+  --header-1: #e5a3ff;   /* Aetheria Lavender: H1 / section eyebrows */
+  --header-1-glow: rgba(229, 163, 255, 0.28);
+  --header-2: #e7bbff;   /* Aetheria Lilac: H2 / Dir nodes */
+  --header-3: #f1d3ff;   /* Aetheria Petal: H3+ / tertiary structure */
+
+  /* ── Interactive & Inline Code ── */
+  --link: #80c8ff;       /* Glow Blue: ALL links, clickable CTAs, focus rings */
+  --link-glow: rgba(128, 200, 255, 0.34);
+  --truth: #a8d8ff;      /* Starlight Blue: link hover & runtime truth */
+  --code: #c1fff0;       /* Seafoam Drift: inline code text & SubDir nodes */
+
+  /* ── Bounded Semantic / Trace Hues (one job per hue) ── */
+  --media: #a8ffe8;      /* Seafoam Core: media/visual frames & [WORKING]/[OK] */
+  --prefs: #dffff9;      /* Seafoam Pearl: theme & preferences */
+  --vault: #cde8ff;      /* Dream Blue: vault, secrets, security & ops boundaries */
+  --wire: #f9ab79;       /* Warnings Orange: web, routing, wire diagnostics, caution */
+  --wire-2: #fbc7a6;     /* Sherbet: lighter wire tint */
+  --wire-3: #fddccd;     /* Peach: lightest wire tint */
+  --note: #fcf5ac;       /* Classes: [EXPERIMENTAL], [OPEN QUESTION], highlights */
+  --note-quiet: #ede4a6; /* Classes (quieted for prose/code) */
+  --sun: #fffdde;        /* Sunlight: tree connector traces */
+  --error: #f8675c;      /* Coral: errors, diff deletions, Poor CARE failures */
+  --string: #f0bad6;     /* String Rose: Base16 syntax strings only (retired from prose) */
+
+  /* ── Held (Present in BubbleForge master set — unassigned, do not spend) ── */
+  --held-glow: #ffc6eb;
+  --held-veil: #ffe6f6;
+  --held-butter: #fff9c9;
+
+  /* ── Typography (Strict 2-font contract + 5-step scale) ── */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --text-2xs: 0.6875rem; /* 11px — mono eyebrows, tags, breadcrumbs */
+  --text-xs: 0.8125rem;  /* 13px — mono telemetry, nav, code, terminal tree */
+  --text-body: 0.96875rem; /* 15.5px — editorial body prose */
+  --text-sub: 1.25rem;   /* 20px — card & section titles */
+  --text-display: clamp(1.85rem, 4vw, 2.5rem); /* 30–40px — page H1 */
+
+  /* ── Layout ── */
+  --measure: 820px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+}
