@@ -153,16 +153,15 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
             <div className="card-top">
               <div className="card-tags">
                 <span className="badge badge--header">VISUAL GRAMMAR</span>
-                <span className="tone-media" style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-2xs)' }}>
-                  [ RATIFIED SPEC ]
-                </span>
+                <span className="route-slug">/thinking/color-contract</span>
               </div>
-              <span className="route-slug">/thinking/color-contract</span>
+              <span className="tone-media" style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-2xs)' }}>
+                [ RATIFIED SPEC ]
+              </span>
             </div>
 
             <div className="card-title-row">
               <h3 className="card-title">The Color Contract</h3>
-              <span className="cta-link">inspect contract →</span>
             </div>
 
             <p className="card-desc card-desc--tight">
@@ -171,6 +170,10 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
               state, prose hierarchy, wire traces, and code blocks from ever
               fighting on screen.
             </p>
+
+            <div className="card-footer card-footer--end">
+              <span className="cta-link">inspect contract →</span>
+            </div>
           </a>
         </div>
       </section>
@@ -197,13 +200,14 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
             <div className="card-top">
               <div className="card-tags">
                 <span className="badge badge--header">INTEROPERABILITY</span>
-                <span className="tone-media">[ ACTIVE LAB ]</span>
+                <span className="route-slug">/doing/turing</span>
               </div>
-              <span className="route-slug">/doing/turing</span>
+              <span className="tone-media" style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-2xs)' }}>
+                [ ACTIVE LAB ]
+              </span>
             </div>
             <div className="card-title-row">
               <h3 className="card-title">Turing</h3>
-              <span className="cta-link">open lab note →</span>
             </div>
             <p className="card-desc card-desc--tight">
               Investigating interoperability across the AI ecosystem: how to
@@ -211,19 +215,23 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
               endpoints, streaming formats, and models without flattening away
               useful capabilities.
             </p>
+            <div className="card-footer card-footer--end">
+              <span className="cta-link">open lab note →</span>
+            </div>
           </a>
 
           <a {...linkCardProps('/doing/document-processing')}>
             <div className="card-top">
               <div className="card-tags">
                 <span className="badge badge--media">STRUCTURED DATA</span>
-                <span className="tone-media">[ ACTIVE LAB ]</span>
+                <span className="route-slug">/doing/document-processing</span>
               </div>
-              <span className="route-slug">/doing/document-processing</span>
+              <span className="tone-media" style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-2xs)' }}>
+                [ ACTIVE LAB ]
+              </span>
             </div>
             <div className="card-title-row">
               <h3 className="card-title">Document Processing</h3>
-              <span className="cta-link">open lab note →</span>
             </div>
             <p className="card-desc card-desc--tight">
               Exploring how to reliably transform messy, heterogeneous human
@@ -231,25 +239,32 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
               slices shared across .dotChat and Neraphis—that both deterministic
               code and language models can actually use.
             </p>
+            <div className="card-footer card-footer--end">
+              <span className="cta-link">open lab note →</span>
+            </div>
           </a>
 
           <a {...linkCardProps('/doing/wirewench')}>
             <div className="card-top">
               <div className="card-tags">
                 <span className="badge badge--wire">WIRE &amp; ROUTING AUDIT</span>
-                <span className="tone-wire">[ ONGOING ]</span>
+                <span className="route-slug">/doing/wirewench</span>
               </div>
-              <span className="route-slug">/doing/wirewench</span>
+              <span className="tone-wire" style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-2xs)' }}>
+                [ ONGOING ]
+              </span>
             </div>
             <div className="card-title-row">
               <h3 className="card-title">WireWench</h3>
-              <span className="cta-link">open lab note →</span>
             </div>
             <p className="card-desc card-desc--tight">
               Empirical auditing of API behavior, routing discrepancies, model
               identity, and provider quirks—measuring the gap between documented
               capabilities and observed runtime truth.
             </p>
+            <div className="card-footer card-footer--end">
+              <span className="cta-link">open lab note →</span>
+            </div>
           </a>
         </div>
       </section>

@@ -143,11 +143,13 @@ export function DossierPage({
                   >
                     <div className="card-title-row">
                       <h3 className="card-title">{bridge.system}</h3>
-                      <span className="cta-link">open system →</span>
                     </div>
                     <p className="card-desc card-desc--tight">
                       {bridge.constraint}
                     </p>
+                    <div className="card-footer card-footer--end">
+                      <span className="cta-link">open system →</span>
+                    </div>
                   </a>
                 ))}
               </div>
