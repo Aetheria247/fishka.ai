@@ -119,13 +119,12 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
             </div>
 
             <p className="card-desc">
-              Twenty years in customer service teaches you a specific kind of
-              pattern recognition: how organizations write procedures intended to
-              help people, and how those same procedures quietly turn into
-              obstacles. When I began encountering the exact same failure modes in
-              AI systems, I started formalizing what actually makes an interaction
-              respectful, transparent, and useful—and translating those findings
-              directly into technical constraints.
+              An AI can be technically correct, perfectly polite, and still
+              provide terrible service. Drawing on twenty years in customer
+              service, the CARE Benchmark explores how to evaluate whether an AI
+              genuinely listens, exercises sound judgment, respects individual
+              agency, and helps the person it serves—not merely whether it
+              produces an acceptable response.
             </p>
 
             <div className="telemetry-box telemetry-box--header">
@@ -143,8 +142,37 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
 
             <div className="card-footer">
               <span className="card-stack-meta">
-                Origin · Evaluated qualities · Good vs. Poor CARE · Engineering bridge
+                Origin · What CARE evaluates · A small example · Engineering bridge
               </span>
+              <span className="cta-link">read dossier →</span>
+            </div>
+          </a>
+
+          <a {...linkCardProps('/thinking/interior-exterior-customers')}>
+            <div className="card-top">
+              <div className="card-tags">
+                <span className="badge badge--header">DESIGN PHILOSOPHY</span>
+                <span className="route-slug">/thinking/interior-exterior-customers</span>
+              </div>
+              <span className="tone-media" style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-2xs)' }}>
+                [ GOVERNING PRINCIPLE ]
+              </span>
+            </div>
+
+            <div className="card-title-row">
+              <h3 className="card-title">Interior and Exterior Customers</h3>
+            </div>
+
+            <p className="card-desc card-desc--tight">
+              A good experience depends on more than what the user sees. The AI
+              model also relies on the context, tools, and environment we build
+              around it. Interior and Exterior Customers is a design philosophy
+              that considers both sides of that relationship, seeking solutions
+              that help models perform effectively while making the human
+              experience more coherent, capable, and trustworthy.
+            </p>
+
+            <div className="card-footer card-footer--end">
               <span className="cta-link">read dossier →</span>
             </div>
           </a>
@@ -165,10 +193,12 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
             </div>
 
             <p className="card-desc card-desc--tight">
-              A hue may mean exactly one thing within a namespace. How the
-              BubbleForge charcoal ramp and .dotChat semantic walls keep chrome
-              state, prose hierarchy, wire traces, and code blocks from ever
-              fighting on screen.
+              Color is more than decoration. By developing consistent visual
+              associations, an interface can communicate state, hierarchy, and
+              meaning before a person reads a single label. The Color Contract
+              explores how a shared visual language makes complex workspaces more
+              cohesive, intuitive, and informative—without sacrificing clarity or
+              accessibility.
             </p>
 
             <div className="card-footer card-footer--end">

@@ -9,13 +9,19 @@ import {
 } from '../data/palette'
 import { copyToClipboard } from '../lib/router'
 import { DottedLeader } from './DottedLeader'
+import { EssayBlocks } from './EssayBlocks'
 
 interface ColorContractViewProps {
   dossier: ColorContractDossier
+  onNavigate: (path: string) => void
   onToast: (message: string) => void
 }
 
-export function ColorContractView({ dossier, onToast }: ColorContractViewProps) {
+export function ColorContractView({
+  dossier,
+  onNavigate,
+  onToast,
+}: ColorContractViewProps) {
   const [activeGroup, setActiveGroup] = useState<PaletteGroupId | 'all'>('all')
   const [selectedId, setSelectedId] = useState<string>('pink')
 
@@ -50,8 +56,20 @@ export function ColorContractView({ dossier, onToast }: ColorContractViewProps) 
       </header>
 
       <section className="dossier-section">
-        <h2 className="dossier-h2">// THE CORE LAW</h2>
+        <EssayBlocks blocks={dossier.intro} onNavigate={onNavigate} />
+      </section>
+
+      <section className="dossier-section">
+        <h2 className="dossier-h2">// THE COLOR CONTRACT</h2>
+        <div className="essay-flow">
+          {dossier.contractIntro.map((para) => (
+            <p key={para.slice(0, 24)} className="essay-p">
+              {para}
+            </p>
+          ))}
+        </div>
         <div className="law-callout">
+          <div className="law-discipline">{dossier.disciplineNote}</div>
           <p className="law-quote">{dossier.coreLaw}</p>
         </div>
         <ul className="obs-list">

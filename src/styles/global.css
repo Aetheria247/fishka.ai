@@ -1246,12 +1246,78 @@ code {
     0 0 14px color-mix(in srgb, var(--glow) 16%, transparent);
 }
 
+.law-discipline {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--header-1);
+  margin-bottom: 0.5rem;
+}
+
 .law-quote {
   margin: 0;
   font-size: 1.05rem;
   font-weight: 500;
   color: var(--neutral);
   line-height: 1.65;
+}
+
+/* ── Editorial Essay Typography (Thinking Dossiers) ── */
+.essay-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+}
+
+.essay-p {
+  margin: 0;
+  color: var(--neutral);
+  font-size: var(--text-body);
+  line-height: 1.76;
+}
+
+.essay-p strong {
+  color: var(--neutral);
+  font-weight: 600;
+}
+
+.essay-p em {
+  font-style: italic;
+}
+
+.essay-standout {
+  margin: 0.25rem 0;
+  color: var(--neutral);
+  font-size: 1.06rem;
+  font-weight: 600;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+}
+
+.essay-grid,
+.essay-links {
+  margin: 0.45rem 0;
+}
+
+.example-panel {
+  background: var(--inset);
+  border: 1px solid var(--elevated);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.inline-dossier-link {
+  color: var(--link);
+  border-bottom: 1px solid color-mix(in srgb, var(--link) 45%, transparent);
+}
+
+.inline-dossier-link:hover {
+  color: var(--truth);
+  border-bottom-color: var(--truth);
 }
 
 .palette-filter-row {

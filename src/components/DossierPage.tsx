@@ -7,6 +7,7 @@ import {
 import { copyToClipboard } from '../lib/router'
 import { ColorContractView } from './ColorContractView'
 import { DottedLeader } from './DottedLeader'
+import { EssayBlocks } from './EssayBlocks'
 
 interface DossierPageProps {
   dossier: Dossier
@@ -53,7 +54,11 @@ export function DossierPage({
 
       <article className="dossier-article">
         {dossier.kind === 'color-contract' ? (
-          <ColorContractView dossier={dossier} onToast={onToast} />
+          <ColorContractView
+            dossier={dossier}
+            onNavigate={onNavigate}
+            onToast={onToast}
+          />
         ) : null}
 
         {dossier.kind === 'thinking' ? (
@@ -75,85 +80,15 @@ export function DossierPage({
             </header>
 
             <section className="dossier-section">
-              <h2 className="dossier-h2">// ORIGIN STORY</h2>
-              <div className="prose-stack" style={{ marginBottom: 0 }}>
-                {dossier.originStory.map((para) => (
-                  <p key={para.slice(0, 24)}>{para}</p>
-                ))}
-              </div>
+              <EssayBlocks blocks={dossier.intro} onNavigate={onNavigate} />
             </section>
 
-            <section className="dossier-section">
-              <h2 className="dossier-h2">// EVALUATED QUALITIES</h2>
-              <div className="two-col-grid">
-                {dossier.qualities.map((q) => (
-                  <div key={q.letter} className="quality-card">
-                    <div className="quality-head">
-                      <span className="quality-letter">{q.letter}</span>
-                      <h3 className="quality-name">{q.name}</h3>
-                    </div>
-                    <p className="quality-desc">{q.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="dossier-section">
-              <h2 className="dossier-h2">// POOR CARE VS. GOOD CARE</h2>
-              <div className="two-col-grid">
-                <div className="compare-card compare-card--poor">
-                  <div className="compare-label tone-error">
-                    {dossier.comparison.poor.label}
-                  </div>
-                  <ul className="compare-list">
-                    {dossier.comparison.poor.items.map((item) => (
-                      <li key={item.slice(0, 24)}>
-                        <span className="compare-mark tone-error">×</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="compare-card compare-card--good">
-                  <div className="compare-label tone-media">
-                    {dossier.comparison.good.label}
-                  </div>
-                  <ul className="compare-list">
-                    {dossier.comparison.good.items.map((item) => (
-                      <li key={item.slice(0, 24)}>
-                        <span className="compare-mark tone-media">✓</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            <section className="dossier-section">
-              <h2 className="dossier-h2">// FROM CARE TO ENGINEERING CONSTRAINTS</h2>
-              <div className="card-stack">
-                {dossier.engineeringBridge.map((bridge) => (
-                  <a
-                    key={bridge.route}
-                    href={bridge.route}
-                    onClick={handleLink(bridge.route)}
-                    className="dossier-card dossier-card--interactive"
-                  >
-                    <div className="card-title-row">
-                      <h3 className="card-title">{bridge.system}</h3>
-                    </div>
-                    <p className="card-desc card-desc--tight">
-                      {bridge.constraint}
-                    </p>
-                    <div className="card-footer card-footer--end">
-                      <span className="cta-link">open system →</span>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </section>
+            {dossier.sections.map((sec) => (
+              <section key={sec.heading} className="dossier-section">
+                <h2 className="dossier-h2">{sec.heading}</h2>
+                <EssayBlocks blocks={sec.blocks} onNavigate={onNavigate} />
+              </section>
+            ))}
           </>
         ) : null}
 

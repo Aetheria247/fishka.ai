@@ -45,6 +45,12 @@ export function Footer({ route, onNavigate, onNavigateSection }: FooterProps) {
                 <a {...linkProps('/thinking/care-benchmark')}>care-benchmark/</a>
               </div>
               <div>
+                <span className="tree-trace">├──</span>
+                <a {...linkProps('/thinking/interior-exterior-customers')}>
+                  interior-exterior-customers/
+                </a>
+              </div>
+              <div>
                 <span className="tree-trace">└──</span>
                 <a {...linkProps('/thinking/color-contract')}>color-contract/</a>
               </div>

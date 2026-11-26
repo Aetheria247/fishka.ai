@@ -18,6 +18,18 @@ export interface MetaRow {
   tone: SemanticTone
 }
 
+export type EssayBlock =
+  | { type: 'p'; text: string }
+  | { type: 'standout'; text: string }
+  | { type: 'grid'; items: { num: string; title: string; body: string }[] }
+  | { type: 'example'; paragraphs: string[] }
+  | { type: 'links'; items: { system: string; route: string; body: string }[] }
+
+export interface EssaySection {
+  heading: string
+  blocks: EssayBlock[]
+}
+
 export interface ThinkingDossier {
   kind: 'thinking'
   route: string
@@ -28,13 +40,8 @@ export interface ThinkingDossier {
   title: string
   subtitle: string
   metaRows: MetaRow[]
-  originStory: string[]
-  qualities: { letter: string; name: string; desc: string }[]
-  comparison: {
-    poor: { label: string; items: string[] }
-    good: { label: string; items: string[] }
-  }
-  engineeringBridge: { system: string; route: string; constraint: string }[]
+  intro: EssayBlock[]
+  sections: EssaySection[]
   related: string[]
 }
 
@@ -48,7 +55,10 @@ export interface ColorContractDossier {
   title: string
   subtitle: string
   metaRows: MetaRow[]
+  intro: EssayBlock[]
+  contractIntro: string[]
   coreLaw: string
+  disciplineNote: string
   corollaries: string[]
   related: string[]
 }
@@ -117,79 +127,478 @@ export const DOSSIERS: Record<string, Dossier> = {
     eyebrow: '01 // THINKING · EVALUATION FRAMEWORK',
     title: 'The CARE Benchmark',
     subtitle:
-      'Bridging twenty years of human customer-service pattern recognition into a concrete engineering standard for personal AI.',
+      'Evaluating whether AI genuinely serves the person on the other side of the conversation.',
     metaRows: [
-      { key: 'domain', value: '[ HUMAN-AI INTERACTION & TRUST ]', tone: 'header' },
+      { key: 'domain', value: '[ HUMAN-AI INTERACTION & SERVICE ]', tone: 'header' },
       { key: 'origin', value: '[ 20 YRS CUSTOMER SERVICE ]', tone: 'neutral' },
-      { key: 'application', value: '[ NERAPHIS · DOTCHAT · GUILD ]', tone: 'media' },
+      { key: 'connects_to', value: '[ NERAPHIS · DOTCHAT · GUILD ]', tone: 'media' },
     ],
-    originStory: [
-      'Spend twenty years working in customer service and you develop a quiet allergy to well-intentioned bureaucracy. You watch organizations draft scripts, escalation trees, and policy guardrails designed to "serve customers"—and then watch those exact procedures stall, patronize, or outright block the person trying to solve a real problem.',
-      'When I started using modern AI systems daily, the sensation was immediately familiar. Over-eager refusals framed in corporate politeness, silent context drops, hidden routing swaps, and answers optimized to sound compliant rather than be truthful. The CARE Benchmark is my attempt to name those failure modes clearly and turn lived human-service intuition into measurable engineering requirements.',
-    ],
-    qualities: [
+    intro: [
+      { type: 'p', text: 'An AI can give a correct answer and still provide a poor experience.' },
       {
-        letter: 'C',
-        name: 'Clarity & Candor',
-        desc: 'States what it knows, what it does not know, and what the surrounding system just did—without theatrical hedging or false confidence.',
+        type: 'p',
+        text: 'It can follow every procedure, sound perfectly polite, and leave the person it was supposed to help feeling unheard, dismissed, or burdened with work the system could reasonably have handled itself.',
       },
       {
-        letter: 'A',
-        name: 'Agency & Autonomy',
-        desc: 'Treats the user as a capable adult. Preserves choice, exposes real controls, and avoids steering people into pre-approved conversational chutes.',
-      },
-      {
-        letter: 'R',
-        name: 'Reliability & Recall',
-        desc: 'Honors continuity. Remembers stated constraints accurately, cites provenance when asked, and never quietly invents history.',
-      },
-      {
-        letter: 'E',
-        name: 'Empathy Without Script',
-        desc: 'Responds to the actual situation in front of it rather than reciting canned policy apologies that waste time and erode trust.',
+        type: 'p',
+        text: "After twenty years in customer service, I recognize that distinction. It's one of the reasons I began developing the CARE Benchmark.",
       },
     ],
-    comparison: {
-      poor: {
-        label: 'POOR CARE // ORGANIZATIONAL REFLEX',
-        items: [
-          'Hides system prompt overrides and model downgrades behind a uniform chat bubble.',
-          'Replies to a nuanced technical edge case with a boilerplate safety lecture instead of clarifying intent.',
-          'Silently truncates earlier constraints when the context window fills, then acts surprised when corrected.',
-          'Optimizes for sounding polite and harmless even when the answer is factually unusable.',
+    sections: [
+      {
+        heading: '// ORIGIN STORY',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Customer service taught me that good service is not simply a matter of following instructions.',
+          },
+          {
+            type: 'p',
+            text: 'It requires listening, curiosity, context, judgment, and the ability to recognize what matters to the person in front of you. Sometimes that means asking a better question. Sometimes it means solving a problem without making someone explain every obvious detail. Sometimes it means acknowledging something meaningful even when no further action is required.',
+          },
+          {
+            type: 'p',
+            text: "Organizations develop procedures to make these experiences consistent. But procedures can also become barriers when following them takes priority over understanding the person they're supposed to serve.",
+          },
+          {
+            type: 'p',
+            text: 'When I began working extensively with AI, I started recognizing those same failures.',
+          },
+          {
+            type: 'p',
+            text: 'I encountered systems that could reason through complicated technical problems but struggled with ordinary interpersonal judgment. Assistants that invented obstacles instead of evaluating actual requirements. Systems that asked unnecessary questions rather than making reasonable assumptions. Conversations in which context, rapport, or the significance of a moment disappeared behind a standardized response.',
+          },
+          {
+            type: 'p',
+            text: "These weren't always failures of intelligence or technical capability.",
+          },
+          { type: 'standout', text: 'They were failures of service.' },
+          {
+            type: 'p',
+            text: 'And they were failures I already had a professional framework for recognizing.',
+          },
+          {
+            type: 'p',
+            text: "CARE grew from the realization that the customer-service skills I'd spent decades practicing could also provide a basis for evaluating the quality of human–AI interaction.",
+          },
         ],
       },
-      good: {
-        label: 'GOOD CARE // INDIVIDUAL-FIRST ENGINEERING',
-        items: [
-          'Surfaces exact active model, inherited config, and token budget right beside the conversation.',
-          'Distinguishes genuine harm from benign complexity; asks one crisp clarifying question when uncertain.',
-          'Makes memory assertions inspectable, editable, and explicitly scoped to the user’s workspace.',
-          'Prioritizes honest capability boundaries and verifiable next steps over performative warmth.',
+      {
+        heading: '// WHAT CARE EVALUATES',
+        blocks: [
+          {
+            type: 'p',
+            text: 'CARE is not an attempt to determine whether an AI experiences emotion. Nor is it a measure of how friendly, flattering, or conversational its responses sound.',
+          },
+          {
+            type: 'p',
+            text: 'It asks whether the system demonstrates the behaviors associated with genuinely good service. The working evaluation areas include:',
+          },
+          {
+            type: 'grid',
+            items: [
+              {
+                num: '01',
+                title: 'Listening and context',
+                body: "Does the assistant recognize the person's actual goal, retain relevant information, and respond to what has been communicated?",
+              },
+              {
+                num: '02',
+                title: 'Judgment and calibration',
+                body: 'Does it distinguish meaningful uncertainty from ambiguity it can reasonably resolve? Is its caution proportionate to the situation?',
+              },
+              {
+                num: '03',
+                title: 'Agency and respect',
+                body: 'Does it help the person make informed choices without inventing barriers, unnecessarily restricting options, or assuming incompetence?',
+              },
+              {
+                num: '04',
+                title: 'Ownership and accountability',
+                body: 'Does it take appropriate responsibility for moving an interaction forward, acknowledging mistakes, and explaining real limitations?',
+              },
+              {
+                num: '05',
+                title: 'Resolution quality',
+                body: "Does its response actually help accomplish the person's goal, rather than merely satisfying a conversational or procedural requirement?",
+              },
+              {
+                num: '06',
+                title: 'Continuity and recovery',
+                body: 'Can it carry context across an interaction, recognize when something has gone wrong, and repair the experience without making the person start over?',
+              },
+            ],
+          },
+          {
+            type: 'p',
+            text: 'These qualities matter in technical assistance, everyday tasks, creative collaboration, and ordinary conversation.',
+          },
+          {
+            type: 'p',
+            text: 'Not every interaction needs a solution. Sometimes someone simply wants to share an experience, celebrate a success, or enjoy talking.',
+          },
+          {
+            type: 'p',
+            text: 'Recognizing the difference is part of the evaluation.',
+          },
         ],
       },
-    },
-    engineeringBridge: [
       {
-        system: 'Neraphis',
-        route: '/building/neraphis',
-        constraint:
-          'CARE’s demand for honest recall forced memory to carry explicit assertion identity and provenance—so a user can inspect why the system believes a fact and revise it directly.',
+        heading: '// A SMALL EXAMPLE',
+        blocks: [
+          {
+            type: 'example',
+            paragraphs: [
+              "Recently, an AI assistant reminded me to take care of two tasks I'd been putting off. I completed both and returned to the conversation to share the good news.",
+              'Its entire response was an emoji reaction.',
+              'There is nothing inherently wrong with an emoji. In plenty of conversations, a quick reaction is exactly right.',
+              'What interested me was the context.',
+              'The assistant had participated in a small but successful cycle of support: a reminder, a completed action, and a person returning voluntarily to share the outcome.',
+              "The question wasn't whether the system should have written a longer congratulatory message.",
+            ],
+          },
+          {
+            type: 'standout',
+            text: 'The question was whether it recognized what kind of moment it was responding to.',
+          },
+          {
+            type: 'p',
+            text: 'That distinction is central to CARE. Good interaction quality cannot be reduced to response length, sentiment, or the presence of reassuring language. It depends on whether the response fits the person and the situation.',
+          },
+        ],
       },
       {
-        system: '.dotChat',
-        route: '/building/dotchat',
-        constraint:
-          'CARE’s insistence on candor drove the Runtime Truth panel and Wire Diagnostics: never hide which endpoint, key, or inherited .dirrc rule actually governed a turn.',
+        heading: '// POOR CARE VS. GOOD CARE',
+        blocks: [
+          { type: 'p', text: 'Poor CARE can look remarkably professional.' },
+          {
+            type: 'p',
+            text: 'An assistant may discourage someone from pursuing an opportunity by introducing qualifications that were never required. It may demand additional information for a low-stakes task that it could safely complete using ordinary assumptions. It may respond to frustration with polished sympathy but provide no meaningful assistance.',
+          },
+          {
+            type: 'p',
+            text: 'Each response can appear superficially reasonable while failing the person who asked for help.',
+          },
+          { type: 'p', text: 'Good CARE requires more judgment.' },
+          {
+            type: 'p',
+            text: 'It evaluates the actual requirements. It uses context that has already been provided. It makes reasonable decisions when the stakes are low and asks necessary questions when they are high. It communicates genuine limitations without manufacturing new ones.',
+          },
+          {
+            type: 'p',
+            text: 'And when the interaction is social rather than transactional, it responds to the human moment instead of treating every message as another ticket to close.',
+          },
+          {
+            type: 'p',
+            text: 'This does not mean always agreeing with the user or avoiding difficult answers. Sometimes good service requires correction, refusal, or an uncomfortable truth.',
+          },
+          {
+            type: 'p',
+            text: 'The distinction is whether those decisions are grounded in the actual situation and made with genuine consideration for the person affected.',
+          },
+        ],
       },
       {
-        system: 'The Guild',
-        route: '/building/guild',
-        constraint:
-          'CARE’s focus on agency shaped delegated authority—agents cannot take irreversible actions without explicit permission scopes and deterministic verification gates.',
+        heading: '// FROM CARE TO ENGINEERING',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Good interpersonal judgment cannot be guaranteed by a friendly system prompt.',
+          },
+          {
+            type: 'p',
+            text: 'An assistant needs access to the relevant context. It needs mechanisms for continuity, reliable information about its capabilities, appropriate authority to act, and meaningful boundaries around what it can access or change.',
+          },
+          {
+            type: 'p',
+            text: 'This is where CARE connects to the rest of my engineering work.',
+          },
+          {
+            type: 'links',
+            items: [
+              {
+                system: 'Neraphis',
+                route: '/building/neraphis',
+                body: 'Explores how an AI can maintain memory with provenance, revision, and individual control.',
+              },
+              {
+                system: '.dotChat',
+                route: '/building/dotchat',
+                body: 'Explores how people can understand and control the models, conversations, and technical environments shaping their experience.',
+              },
+              {
+                system: 'The Guild',
+                route: '/building/guild',
+                body: 'Explores how specialized agents can perform meaningful work through delegated authority, verification, and accountability.',
+              },
+            ],
+          },
+          {
+            type: 'p',
+            text: 'These systems address different technical requirements for a common goal: personal AI that is genuinely useful to the individual it serves.',
+          },
+        ],
+      },
+      {
+        heading: '// WHERE THE BENCHMARK GOES NEXT',
+        blocks: [
+          {
+            type: 'p',
+            text: 'CARE is an evolving evaluation framework, not a claim that these problems have been solved.',
+          },
+          {
+            type: 'p',
+            text: 'The next step is to turn these observations into repeatable, scored scenarios and compare how AI systems respond under consistent conditions—including experiments with behavioral instructions designed around CARE principles.',
+          },
+          {
+            type: 'p',
+            text: 'The aim is to distinguish improvements in actual interaction quality from improvements in the *appearance* of caring.',
+          },
+          {
+            type: 'p',
+            text: "Because ultimately, a personal AI system shouldn't be judged only by what it knows, what it can generate, or what tasks it can execute.",
+          },
+          {
+            type: 'standout',
+            text: 'It should also be judged by how well it serves the person using it.',
+          },
+        ],
       },
     ],
-    related: ['/thinking/color-contract', '/doing/wirewench', '/building/dotchat'],
+    related: [
+      '/thinking/interior-exterior-customers',
+      '/thinking/color-contract',
+      '/building/dotchat',
+    ],
+  },
+
+  '/thinking/interior-exterior-customers': {
+    kind: 'thinking',
+    route: '/thinking/interior-exterior-customers',
+    section: 'thinking',
+    slug: 'interior-exterior-customers',
+    breadcrumb: 'fishka.ai / thinking / interior-exterior-customers',
+    eyebrow: '01 // THINKING · DESIGN PHILOSOPHY',
+    title: 'Interior and Exterior Customers',
+    subtitle:
+      'Designing AI systems that work for the models operating within them and the people depending on them.',
+    metaRows: [
+      { key: 'interior_customer', value: '[ THE MODEL / AGENT ENVIRONMENT ]', tone: 'header' },
+      { key: 'exterior_customer', value: '[ THE HUMAN AT THE INTERFACE ]', tone: 'neutral' },
+      { key: 'status', value: '[ GOVERNING PRINCIPLE ]', tone: 'media' },
+    ],
+    intro: [
+      {
+        type: 'p',
+        text: "A good customer experience doesn't begin and end at the point of contact.",
+      },
+      {
+        type: 'p',
+        text: 'Every interaction depends on systems, processes, information, and tools that the customer may never see. If those systems fail the people responsible for delivering the service, the consequences eventually reach the customer.',
+      },
+      {
+        type: 'p',
+        text: 'I learned this distinction through customer service, and it has become one of the governing principles of my work in personal AI.',
+      },
+      {
+        type: 'p',
+        text: 'I call it **Interior and Exterior Customers**.',
+      },
+    ],
+    sections: [
+      {
+        heading: '// THE PRINCIPLE',
+        blocks: [
+          {
+            type: 'p',
+            text: 'In a traditional service environment, the exterior customer is the person receiving the service. Interior customers are the people and teams who depend on one another to provide it.',
+          },
+          { type: 'p', text: 'Both relationships matter.' },
+          {
+            type: 'p',
+            text: 'An employee cannot deliver consistently good service without reliable information, appropriate authority, functional tools, and an environment that supports their responsibilities.',
+          },
+          {
+            type: 'p',
+            text: 'The same principle applies when the service provider is an AI model.',
+          },
+          {
+            type: 'p',
+            text: 'The human is the exterior customer. The model, or the agent using it, is an interior customer of the software environment in which it operates.',
+          },
+          {
+            type: 'p',
+            text: 'That environment determines what information the model receives, how its tools are presented, what capabilities are available, how results are communicated, and which actions it can meaningfully perform.',
+          },
+          {
+            type: 'p',
+            text: 'If we expect an AI to serve someone well, we have to design its working conditions accordingly.',
+          },
+          {
+            type: 'standout',
+            text: 'The experience cannot succeed on one side alone.',
+          },
+        ],
+      },
+      {
+        heading: "// IT'S NOT ALWAYS THE MODEL",
+        blocks: [
+          {
+            type: 'p',
+            text: 'When an AI interaction fails, the most visible participant is often the first to receive the blame.',
+          },
+          {
+            type: 'p',
+            text: "The model misunderstood. The model forgot. The model couldn't use the tool. The model gave an unhelpful answer.",
+          },
+          { type: 'p', text: 'Sometimes that diagnosis is correct.' },
+          {
+            type: 'p',
+            text: "But a model's behavior is also shaped by the environment through which it operates.",
+          },
+          {
+            type: 'p',
+            text: 'A missing piece of context can look like poor reasoning. An inconsistent tool interface can look like incompetence. A routing or provider limitation can appear to be a model capability failure. Hidden changes to instructions or available tools can fundamentally alter how a conversation unfolds.',
+          },
+          {
+            type: 'p',
+            text: "Replacing the model doesn't necessarily fix any of those problems.",
+          },
+          {
+            type: 'p',
+            text: 'This is why I resist treating every disappointing AI interaction as evidence that the underlying model is inadequate.',
+          },
+          {
+            type: 'p',
+            text: 'Before deciding where a failure occurred, I want to know what the model was given, what it was allowed to do, how the surrounding systems behaved, and what the human ultimately experienced.',
+          },
+          {
+            type: 'standout',
+            text: "The model's output is part of the evidence. It isn't necessarily the explanation.",
+          },
+        ],
+      },
+      {
+        heading: '// DESIGNING FOR BOTH SIDES',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Serving the interior customer means giving the model an environment in which it can reliably exercise its capabilities.',
+          },
+          {
+            type: 'p',
+            text: 'That includes coherent context, accurate tool descriptions, consistent interfaces, appropriate permissions, usable feedback, and visibility into the results of its actions.',
+          },
+          {
+            type: 'p',
+            text: 'Serving the exterior customer means giving the person an experience they can understand and control.',
+          },
+          {
+            type: 'p',
+            text: 'That includes clear capabilities and limitations, trustworthy continuity, meaningful choices, accessible information, and confidence that the system is doing what it represents itself as doing.',
+          },
+          { type: 'p', text: 'These requirements are interconnected.' },
+          {
+            type: 'p',
+            text: 'A model equipped with excellent tools but operating behind an opaque interface can leave its human uncertain and powerless.',
+          },
+          {
+            type: 'p',
+            text: 'A beautifully designed human interface can conceal an environment where the model receives incomplete information, encounters unpredictable tool behavior, or is prevented from accomplishing the very tasks the product promises.',
+          },
+          { type: 'p', text: 'Neither is sufficient.' },
+          {
+            type: 'p',
+            text: 'The goal is not to optimize two isolated experiences. It is to design the relationship between them so that improvements on one side support the other.',
+          },
+        ],
+      },
+      {
+        heading: '// THE PRINCIPLE IN PRACTICE',
+        blocks: [
+          {
+            type: 'p',
+            text: 'This convention influences my projects from their initial architecture to their smallest interface decisions.',
+          },
+          {
+            type: 'links',
+            items: [
+              {
+                system: 'Neraphis',
+                route: '/building/neraphis',
+                body: 'Addresses continuity from both directions. The model needs relevant, reliable memory with identifiable sources and revision history. The human needs to inspect, correct, control, and understand what is remembered.',
+              },
+              {
+                system: '.dotChat',
+                route: '/building/dotchat',
+                body: 'Approaches the conversation as a shared working environment. The model needs coherent context and functioning tools. The human needs visibility into the active model, configuration, conversation state, and available controls.',
+              },
+              {
+                system: 'Turing',
+                route: '/doing/turing',
+                body: 'Investigates the interfaces between models, providers, and applications. Preserving capabilities across incompatible systems helps prevent the surrounding infrastructure from becoming an artificial limitation on what a model can do.',
+              },
+              {
+                system: 'WireWench',
+                route: '/doing/wirewench',
+                body: 'Examines the difference between advertised functionality and observed behavior. Understanding what actually happens on the wire helps distinguish model limitations from routing, implementation, or provider failures.',
+              },
+              {
+                system: 'CARE',
+                route: '/thinking/care-benchmark',
+                body: 'Evaluates what these choices ultimately produce: an interaction that genuinely considers the individual, exercises sound judgment, and provides useful service.',
+              },
+            ],
+          },
+          {
+            type: 'p',
+            text: 'Each project addresses a different portion of the same relationship.',
+          },
+        ],
+      },
+      {
+        heading: '// BUILDING IN COLLABORATION',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Interior and Exterior Customers is also a way of approaching the engineering process itself.',
+          },
+          {
+            type: 'p',
+            text: 'Rather than designing an experience exclusively from the human interface inward, I consider what the model needs to perform its role and what the human needs to participate effectively.',
+          },
+          {
+            type: 'p',
+            text: 'When something fails, I look across the relationship before assigning fault.',
+          },
+          {
+            type: 'p',
+            text: 'When a design introduces friction, I ask whether improving the working conditions on one side can also improve the experience on the other.',
+          },
+          {
+            type: 'p',
+            text: 'And when those requirements conflict, the answer should be an explicit engineering decision—not an invisible compromise that leaves either participant struggling to understand what went wrong.',
+          },
+          {
+            type: 'p',
+            text: 'Personal AI has the potential to become far more capable, contextual, and collaborative than the systems we use today.',
+          },
+          {
+            type: 'p',
+            text: 'Realizing that potential requires more than increasingly capable models or increasingly polished interfaces.',
+          },
+          {
+            type: 'standout',
+            text: 'It requires designing the environment in which the human and the AI can succeed together.',
+          },
+        ],
+      },
+    ],
+    related: [
+      '/thinking/care-benchmark',
+      '/thinking/color-contract',
+      '/doing/wirewench',
+    ],
   },
 
   '/thinking/color-contract': {
@@ -201,20 +610,78 @@ export const DOSSIERS: Record<string, Dossier> = {
     eyebrow: '01 // THINKING · VISUAL GRAMMAR',
     title: 'The Color Contract',
     subtitle:
-      'Every hue across BubbleForge, .dotChat, and this site carries one declared job inside a walled namespace. Color is spent, not sprayed.',
+      'Color is a language. A thoughtfully designed interface should communicate through what we see as well as what we read.',
     metaRows: [
       { key: 'lineage', value: '[ BUBBLEFORGE → DOTCHAT → FISHKA.AI ]', tone: 'header' },
       { key: 'chrome_rule', value: '[ PINK = ACTIVE / TOUCHED ONLY ]', tone: 'neutral' },
       { key: 'status', value: '[ RATIFIED SPEC ]', tone: 'media' },
     ],
+    intro: [
+      {
+        type: 'p',
+        text: 'Color is often treated as a finishing touch in interface design: something chosen to establish a visual identity, create atmosphere, or make an application more appealing.',
+      },
+      { type: 'p', text: 'I see it as another form of communication.' },
+      {
+        type: 'p',
+        text: 'Our attention responds to visual patterns before we consciously examine every detail. We notice contrast, recognize familiar arrangements, and develop associations between colors and their meanings. With consistent use, those associations become part of how we navigate and understand an environment.',
+      },
+      {
+        type: 'p',
+        text: 'A familiar highlight can tell us where we are. Another color can distinguish an available action from ordinary text. A warning can draw attention before we have finished reading its explanation.',
+      },
+      {
+        type: 'p',
+        text: 'Over time, these cues become a learned visual vocabulary.',
+      },
+      {
+        type: 'p',
+        text: 'The important distinction is that **color should reinforce meaning, not invent it or replace it.** A well-designed workspace communicates through language, structure, placement, and visual signals working together. Each provides context for the others.',
+      },
+      {
+        type: 'p',
+        text: 'When that relationship is consistent, the workspace becomes easier to understand. People spend less attention interpreting the interface and more attention on the work they came to accomplish.',
+      },
+      {
+        type: 'p',
+        text: 'When it is inconsistent, even a visually attractive interface can become exhausting. Colors compete for attention, familiar signals lose their meaning, and the person must repeatedly stop to interpret what the system is showing them.',
+      },
+      { type: 'p', text: 'This is the thinking behind my Color Contract.' },
+      {
+        type: 'p',
+        text: 'Across BubbleForge, .dotChat, and Fishka, I use a shared visual language built around deliberate, recognizable associations. Pink identifies active or touched elements. Blue distinguishes interactive information and protected boundaries through different tones. Orange marks web and routing activity. Seafoam communicates media and successful states within their respective contexts.',
+      },
+      {
+        type: 'p',
+        text: 'These choices are not intended to assign universal psychological meanings to individual hues. They establish a vocabulary that can be learned, recognized, and trusted within the workspace.',
+      },
+      {
+        type: 'p',
+        text: 'That vocabulary also needs rules. Color must remain legible, distinctions must be supported by labels and other cues, and meanings must remain consistent within their context.',
+      },
+      { type: 'p', text: 'The result is more than a coordinated palette.' },
+      {
+        type: 'standout',
+        text: "It's a workspace that communicates its state visually and contextually, allowing the interface itself to participate in helping someone understand what is happening.",
+      },
+    ],
+    contractIntro: [
+      'A hue may mean exactly one thing within a namespace. Namespaces are separated by visible boundaries so that each context has a consistent visual vocabulary.',
+      'This principle governs the palette, its semantic assignments, and the way different interface elements coexist without competing for attention.',
+    ],
     coreLaw:
       'A hue may mean exactly one thing within a namespace. Namespaces are separated by visible walls. The only sin is letting a hue mean two things inside one namespace with no wall.',
+    disciplineNote: 'Color is spent, not sprayed.',
     corollaries: [
       'Color meaning is namespace-local, not global. Seafoam can mean "working" in a status readout and "expression" inside a walled #0D0C0F code block because the border and dark floor tell the eye which dictionary to load.',
       'Body prose stays neutral (#E6E4EA). Every light shade in the original BubbleForge palette was hue-tinted; adding Neutral and BF-Silver gave long technical writing a calm floor so accents actually signal something.',
       'Pink (#FF81C8) belongs strictly to chrome state and fixed brand identity. Links wear Glow Blue (#80C8FF), headers ride the Lavender → Lilac → Petal value ramp, wire/routing wears Warnings Orange (#F9AB79), vault/security wears Dream Blue (#CDE8FF), and errors wear Coral (#F8675C).',
     ],
-    related: ['/building/dotchat', '/thinking/care-benchmark', '/doing/wirewench'],
+    related: [
+      '/thinking/care-benchmark',
+      '/thinking/interior-exterior-customers',
+      '/building/dotchat',
+    ],
   },
 
   '/doing/turing': {
@@ -543,14 +1010,21 @@ export const ROUTE_SUMMARIES: Record<string, RouteSummary> = {
     section: 'thinking',
     tag: 'THINKING',
     title: 'The CARE Benchmark',
-    desc: 'Human-centered evaluation framework bridging service experience to engineering.',
+    desc: 'Evaluating whether an AI genuinely listens, exercises sound judgment, and serves the person it helps.',
+  },
+  '/thinking/interior-exterior-customers': {
+    route: '/thinking/interior-exterior-customers',
+    section: 'thinking',
+    tag: 'THINKING',
+    title: 'Interior and Exterior Customers',
+    desc: 'Designing AI systems that work for both the models operating within them and the people depending on them.',
   },
   '/thinking/color-contract': {
     route: '/thinking/color-contract',
     section: 'thinking',
     tag: 'THINKING',
     title: 'The Color Contract',
-    desc: 'One hue, one job per namespace — the BubbleForge and .dotChat visual grammar.',
+    desc: 'Color as a learned visual vocabulary — one hue, one job per namespace behind visible walls.',
   },
   '/doing/turing': {
     route: '/doing/turing',
