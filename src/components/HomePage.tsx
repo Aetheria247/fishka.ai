@@ -38,7 +38,9 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
           <span>EDITORIAL DOSSIER // FISHKA.AI</span>
         </div>
 
-        <h1 className="hero-title">Personal AI should serve the person first.</h1>
+        <h1 className="hero-title">
+          How you like to AI should be a configuration, not an ultimatum
+        </h1>
 
         <p className="hero-lead">
           An exploration of individual agency, continuity, privacy, security, and
