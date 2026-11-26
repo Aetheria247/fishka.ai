@@ -1,6 +1,6 @@
 import type { MouseEvent } from 'react'
 import type { SectionId } from '../lib/router'
-import { FishkaEmblem } from './FishkaEmblem'
+import { FishkaBeacon } from './FishkaBeacon'
 
 interface FooterProps {
   route: string
@@ -96,18 +96,21 @@ export function Footer({ route, onNavigate, onNavigateSection }: FooterProps) {
         </div>
 
         <div className="colophon">
-          <div className="colophon-brand">
-            <FishkaEmblem size={30} />
-            <div>
-              <div className="colophon-name">fishka.ai</div>
-              <div className="colophon-sub">BubbleForge · Editorial Dossier</div>
+          <div className="colophon-meta">
+            <div className="colophon-name">
+              fishka<span className="brand-tld">.ai</span>
             </div>
+            <div className="colophon-sub">BubbleForge · Editorial Dossier</div>
+            <p className="colophon-note">
+              Thinking → Doing → Building → Who.
+              <br />
+              Built to explain, not to sell.
+            </p>
           </div>
-          <p className="colophon-note">
-            Thinking → Doing → Building → Who.
-            <br />
-            Built to explain, not to sell.
-          </p>
+
+          <div className="footer-beacon-slot">
+            <FishkaBeacon size={84} />
+          </div>
         </div>
       </div>
     </footer>
