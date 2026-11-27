@@ -1073,43 +1073,402 @@ export const DOSSIERS: Record<string, Dossier> = {
     status: '[ ONGOING ]',
     statusTone: 'wire',
     title: 'WireWench',
-    subtitle:
-      'Empirical auditing of API behavior, routing discrepancies, model identity, and the gap between documented capabilities and observed runtime behavior.',
+    subtitle: 'The response is not the whole interaction.',
     metaRows: [
       { key: 'lab_track', value: '[ WIRE & ROUTING AUDIT ]', tone: 'wire' },
-      { key: 'status', value: '[ ONGOING ]', tone: 'wire' },
-      { key: 'feeds_into', value: '[ CARE · DOTCHAT ]', tone: 'neutral' },
+      { key: 'status', value: '[ EARLY-STAGE LAB ]', tone: 'wire' },
+      { key: 'feeds_into', value: '[ TURING · CARE · DOTCHAT ]', tone: 'neutral' },
     ],
-    hypothesis:
-      'Trustworthy AI cannot rely solely on trusting what a model says; a user must also be able to verify what the surrounding transport and routing layer actually executed on the wire.',
-    method: [
-      'Built lightweight diagnostic probes that capture exact outbound headers, request payloads, HTTP response metadata, latency profiles, and returned model-ID strings.',
-      'Compared documented provider behavior (context limits, caching headers, tool-choice guarantees, model aliases) against repeatable live test suites.',
-      'Logged silent alias redirects, quantization drift indicators, and discrepancies between reported token counts and actual billed/consumed windows.',
-    ],
-    observations: [
-      'Returned model identifiers frequently differ from requested aliases—sometimes harmlessly (snapshot pins), sometimes silently routing to a fallback tier.',
-      'Prompt-caching and rate-limit headers are inconsistently populated across intermediaries, making client-side verification essential for accurate cost and latency diagnostics.',
-      'Exposing raw wire traces inside the user interface immediately demystifies "weird model behavior" that users would otherwise blame on their own prompting.',
-    ],
-    resultsAndQuestions: [
+    intro: [
+      { type: 'p', text: 'My investigation began with an inconsistency.' },
       {
-        status: 'RESULT',
-        tone: 'media',
-        text: 'Directly inspired dotChat’s "Runtime Truth" and "Negotiation Wire" diagnostic panels.',
+        type: 'p',
+        text: 'While accessing Claude through different API providers, I encountered noticeably different refusal behavior, sometimes with the same prompts and nominally the same model.',
       },
       {
-        status: 'OPEN QUESTION',
-        tone: 'note',
-        text: 'Can lightweight behavioral fingerprinting reliably detect unannounced quantization or upstream routing changes without burning excessive tokens?',
+        type: 'p',
+        text: 'The responses themselves offered little explanation. Looking through the available logs led me to consider a variable I had previously taken for granted: the infrastructure serving the model.',
       },
       {
-        status: 'OPEN QUESTION',
-        tone: 'note',
-        text: 'What minimal telemetry summary gives non-specialist users confidence without overwhelming them with raw HTTP dumps?',
+        type: 'p',
+        text: 'An API provider is not necessarily a transparent connection between an application and a model. It may introduce additional routing, configuration, processing, or restrictions that influence the resulting interaction.',
+      },
+      { type: 'p', text: 'I wanted to understand what was actually happening.' },
+      { type: 'p', text: 'And I wanted better tools to investigate it.' },
+    ],
+    sections: [
+      {
+        heading: '// WHY WIREWENCH',
+        blocks: [
+          {
+            type: 'p',
+            text: 'The original idea was straightforward: **a Wireshark for AI API connections.**',
+          },
+          {
+            type: 'p',
+            text: "Wireshark makes network traffic inspectable. Instead of relying exclusively on an application's interpretation of a connection, it allows an investigator to examine the observable exchanges and establish what occurred at the network level.",
+          },
+          {
+            type: 'p',
+            text: 'I wanted to bring that same investigative approach to AI services.',
+          },
+          {
+            type: 'p',
+            text: 'Not a debugging tool limited to one provider, model, or failure condition. An instrument capable of exposing as much information as possible at the observable boundaries of an API interaction.',
+          },
+          {
+            type: 'p',
+            text: 'The initial implementation was modest: a JSON transaction report similar to the diagnostic views available through services such as OpenRouter.',
+          },
+          {
+            type: 'p',
+            text: 'The significance of that first iteration was not its complexity. It was the question behind it.',
+          },
+          {
+            type: 'standout',
+            text: 'How much of the behavior we attribute to a model is actually determined by the systems through which we access it?',
+          },
+          {
+            type: 'p',
+            text: 'That question became the foundation for a broader investigation into AI interoperability, inference integrity, and provider accountability.',
+          },
+        ],
+      },
+      {
+        heading: '// BEYOND THE MODEL NAME',
+        blocks: [
+          {
+            type: 'p',
+            text: 'An advertised model identifier is not a complete description of the service being delivered.',
+          },
+          {
+            type: 'p',
+            text: 'Two providers may offer access to the same named model while differing in ways that materially affect its behavior. Those differences may include:',
+          },
+          {
+            type: 'grid',
+            items: [
+              {
+                num: '01',
+                title: 'Model identity and version',
+                body: 'The actual model family, checkpoint, and revision being served.',
+              },
+              {
+                num: '02',
+                title: 'Quantization',
+                body: 'The precision at which model weights are represented, including reductions that may affect performance or behavior.',
+              },
+              {
+                num: '03',
+                title: 'Inference configuration',
+                body: 'Sampling parameters, reasoning budgets, context limits, and provider-specific defaults.',
+              },
+              {
+                num: '04',
+                title: 'Processing and intervention',
+                body: 'Additional instructions, prompt expansion, safety filters, or transformations applied before or after inference.',
+              },
+              {
+                num: '05',
+                title: 'Routing and hosting',
+                body: 'The infrastructure responsible for processing the request, including intermediaries that may not be apparent to the client.',
+              },
+              {
+                num: '06',
+                title: 'Capability preservation',
+                body: 'Whether native model features, including reasoning and tool use, remain available through the selected route.',
+              },
+            ],
+          },
+          {
+            type: 'p',
+            text: 'These distinctions matter because an authentic model can still produce a materially altered experience when served under different conditions.',
+          },
+          {
+            type: 'p',
+            text: 'A customer selecting a particular model should be able to understand the conditions under which that model is being delivered.',
+          },
+          {
+            type: 'p',
+            text: 'That does not mean every property can be established through API inspection alone.',
+          },
+          {
+            type: 'p',
+            text: 'Quantization, checkpoint identity, and internal routing may be impossible to independently verify from external responses. Behavioral differences can indicate that further investigation is warranted without identifying their precise cause.',
+          },
+          {
+            type: 'p',
+            text: 'WireWench therefore distinguishes between information a provider declares, behavior that can be directly observed, conclusions supported by testing, and properties that remain unknown.',
+          },
+          {
+            type: 'standout',
+            text: "A model's identity is more than its name. It includes the conditions under which its behavior is produced.",
+          },
+        ],
+      },
+      {
+        heading: '// WHAT THE INVESTIGATION EXPOSED',
+        blocks: [
+          {
+            type: 'p',
+            text: 'The broader research surrounding WireWench has already demonstrated why this distinction is useful.',
+          },
+          {
+            type: 'p',
+            text: 'Through manual examination of API schemas, provider documentation, configuration options, and observable behavior, we encountered capabilities and controls that were not immediately apparent from ordinary product interfaces.',
+          },
+          {
+            type: 'p',
+            text: 'Investigations involving SeedDance exposed face-detection functionality. Examination of WAN integrations surfaced configurable filtering and prompt-processing controls.',
+          },
+          {
+            type: 'p',
+            text: 'These findings did not establish wrongdoing. They demonstrated that important details about how an AI service operates may exist outside the experience presented to its customers.',
+          },
+          {
+            type: 'p',
+            text: 'The same principle applies to provider-specific refusals, differences in response structure, hidden defaults, and discrepancies between documented and observed capabilities.',
+          },
+          {
+            type: 'p',
+            text: 'A final response may reveal that something happened without explaining where or why it happened.',
+          },
+          {
+            type: 'p',
+            text: "WireWench's intended role is to support that investigation with consistent, inspectable evidence.",
+          },
+          {
+            type: 'p',
+            text: 'The manual discoveries informing this work are distinct from the capabilities of the current WireWench implementation. They establish the investigative requirements for the instrument rather than representing results already produced by it.',
+          },
+        ],
+      },
+      {
+        heading: '// THE PRIVACY AND SECURITY BOUNDARY',
+        blocks: [
+          { type: 'p', text: 'Model integrity is only part of the problem.' },
+          {
+            type: 'p',
+            text: 'When someone connects an application to an AI service, they may be entrusting that service with considerably more than a prompt.',
+          },
+          {
+            type: 'p',
+            text: 'Depending on the application and permissions involved, requests may contain conversation history, personal documents, tool results, proprietary information, or sensitive credentials.',
+          },
+          {
+            type: 'p',
+            text: 'Those requests may also pass through multiple infrastructure providers.',
+          },
+          {
+            type: 'p',
+            text: 'The customer does not necessarily have direct visibility into every organization handling the information, how long it is retained, or whether the selected route introduces additional data-processing systems.',
+          },
+          {
+            type: 'p',
+            text: 'Privacy policies and provider assurances offer important information, but they are not equivalent to independently observed behavior.',
+          },
+          {
+            type: 'p',
+            text: 'WireWench approaches this as a question of evidence and trust boundaries.',
+          },
+          {
+            type: 'p',
+            text: 'What information leaves the client? Which endpoint receives it? What does the service disclose about subsequent processing? What behavior can be tested? And where does external visibility end?',
+          },
+          {
+            type: 'p',
+            text: 'An honest inspection system must acknowledge those limits.',
+          },
+          {
+            type: 'p',
+            text: 'It must also protect the information it examines.',
+          },
+          {
+            type: 'p',
+            text: 'Inspecting API traffic can expose authentication credentials, private conversations, and other sensitive material. Local processing, controlled capture, secret redaction, retention limits, and safe diagnostic exports are therefore essential considerations for the intended architecture.',
+          },
+          {
+            type: 'standout',
+            text: 'A tool designed to investigate trust should not introduce an additional, unnecessary point of exposure.',
+          },
+        ],
+      },
+      {
+        heading: '// TRUST IS NOT A ONE-TIME CHECK',
+        blocks: [
+          {
+            type: 'p',
+            text: 'A connection that behaves consistently today may not remain unchanged.',
+          },
+          {
+            type: 'p',
+            text: 'Providers can update serving infrastructure, introduce new middleware, modify inference defaults, change routing arrangements, or replace model versions without requiring any action from the customer.',
+          },
+          {
+            type: 'p',
+            text: 'Some changes are routine and legitimate. Others may meaningfully alter the service being delivered.',
+          },
+          {
+            type: 'p',
+            text: 'The important distinction is that customers should be able to recognize when those conditions change.',
+          },
+          {
+            type: 'p',
+            text: "WireWench's longer-term direction is continuous connection monitoring.",
+          },
+          {
+            type: 'p',
+            text: 'The intended workflow begins by establishing a baseline of available provider information and observable behavior. Subsequent observations can then be compared against that baseline to identify meaningful changes.',
+          },
+          {
+            type: 'p',
+            text: 'Where appropriate, controlled tests could help distinguish ordinary model variability from reproducible changes in capability or configuration.',
+          },
+          {
+            type: 'p',
+            text: 'Not every difference is an anomaly, and not every anomaly is evidence of misconduct.',
+          },
+          {
+            type: 'p',
+            text: 'A useful instrument must account for uncertainty, avoid unnecessary alarms, and provide sufficient context to support further investigation.',
+          },
+          {
+            type: 'p',
+            text: 'Its purpose is not to pronounce a provider trustworthy or untrustworthy.',
+          },
+          {
+            type: 'standout',
+            text: 'Its purpose is to ensure that trust remains open to inspection as the service evolves.',
+          },
+        ],
+      },
+      {
+        heading: '// OBSERVABILITY IN SERVICE OF AGENCY',
+        blocks: [
+          {
+            type: 'p',
+            text: 'The intended audience for WireWench is not limited to developers or infrastructure specialists.',
+          },
+          {
+            type: 'p',
+            text: 'People who purchase AI services should be able to inspect the integrity of those connections without needing to interpret raw HTTP traces, decode provider-specific schemas, or conduct their own technical investigations.',
+          },
+          {
+            type: 'p',
+            text: 'That suggests two complementary levels of access.',
+          },
+          {
+            type: 'p',
+            text: 'A human-facing inspection view should communicate what service is being purchased, which properties have been disclosed, what has been independently observed, and whether meaningful changes have occurred.',
+          },
+          {
+            type: 'p',
+            text: 'A deeper diagnostic view should make the underlying evidence available for technical investigation, including relevant request and response records, exposed configuration, provider declarations, and comparisons across observations.',
+          },
+          {
+            type: 'p',
+            text: 'Both views must preserve the distinction between verified information, provider claims, inference, and uncertainty.',
+          },
+          {
+            type: 'p',
+            text: "More importantly, WireWench is intended to inform decisions rather than make them on the person's behalf.",
+          },
+          {
+            type: 'p',
+            text: 'A detected change might eventually support several possible actions: further investigation, provider comparison, connection suspension, or recalibration of compatibility information used by another system.',
+          },
+          {
+            type: 'p',
+            text: 'But the governing principle remains the same.',
+          },
+          {
+            type: 'standout',
+            text: "WireWench is not intended to decide which providers deserve a person's trust. It is intended to give that person the evidence necessary to make that decision for themselves.",
+          },
+        ],
+      },
+      {
+        heading: '// WORKING TODAY',
+        blocks: [
+          { type: 'p', text: 'WireWench is an early-stage investigation.' },
+          {
+            type: 'p',
+            text: 'Its initial implementation provides a basic API transaction-reporting foundation. The broader discoveries informing its direction have come from manual API research and comparison rather than an automated inspection platform.',
+          },
+          {
+            type: 'p',
+            text: 'The project does not yet provide the comprehensive capture, ongoing monitoring, or independent model-integrity verification described in its intended architecture.',
+          },
+          {
+            type: 'p',
+            text: 'The immediate development opportunity is to turn those investigative practices into repeatable, inspectable workflows.',
+          },
+          {
+            type: 'p',
+            text: 'This includes identifying which request and response properties can be captured reliably, defining safe handling for sensitive information, and establishing a consistent evidence model for comparing provider declarations against observed behavior.',
+          },
+          {
+            type: 'p',
+            text: 'The resulting structure could support both technical diagnostics and accessible connection summaries.',
+          },
+        ],
+      },
+      {
+        heading: '// NEXT INVESTIGATION',
+        blocks: [
+          {
+            type: 'p',
+            text: 'The next stage of WireWench centers on three capabilities.',
+          },
+          {
+            type: 'bullets',
+            items: [
+              {
+                lead: 'Connection inspection.',
+                body: 'Establish a structured baseline for each configured model route, including observable protocol behavior, declared capabilities, exposed inference settings, and available provider information.',
+              },
+              {
+                lead: 'Continuous monitoring.',
+                body: 'Compare subsequent observations against established baselines, identifying meaningful changes while distinguishing routine variability from evidence requiring investigation.',
+              },
+              {
+                lead: 'Evidence-based reporting.',
+                body: 'Present findings in a form that allows both technical and nontechnical users to understand what changed, how it was established, and what remains uncertain.',
+              },
+            ],
+          },
+          {
+            type: 'p',
+            text: 'The relationship to [Turing](/doing/turing) is particularly important.',
+          },
+          {
+            type: 'p',
+            text: 'Turing investigates how to preserve and accommodate differences between AI models and serving infrastructure. WireWench provides a potential investigative foundation for identifying and characterizing those differences.',
+          },
+          {
+            type: 'p',
+            text: 'Where Turing seeks a reliable translation, WireWench seeks reliable observations.',
+          },
+          {
+            type: 'p',
+            text: 'Together, they represent complementary approaches to a shared engineering problem: making AI infrastructure more understandable without requiring users to surrender control over their experience.',
+          },
+          {
+            type: 'p',
+            text: 'The objective of WireWench is not to eliminate every uncertainty in an AI connection. Some properties of remote infrastructure will remain inaccessible without stronger forms of provider disclosure or independent attestation.',
+          },
+          {
+            type: 'p',
+            text: 'The objective is to make the available evidence useful, the remaining uncertainty explicit, and the resulting decisions accessible to the person paying for the service.',
+          },
+          {
+            type: 'standout',
+            text: "People deserve to know what they're purchasing. They deserve to know when it changes. And they deserve the information to decide whether it continues to meet their expectations.",
+          },
+        ],
       },
     ],
-    related: ['/thinking/care-benchmark', '/doing/turing', '/building/dotchat'],
+    related: ['/doing/turing', '/thinking/care-benchmark', '/building/dotchat'],
   },
 
   '/building/neraphis': {
@@ -1320,7 +1679,7 @@ export const ROUTE_SUMMARIES: Record<string, RouteSummary> = {
     section: 'doing',
     tag: 'DOING // WIRE',
     title: 'WireWench',
-    desc: 'Auditing documented API behavior against observed runtime truth.',
+    desc: 'A Wireshark-inspired investigation into AI API connections, provider routing, inference integrity, and observable evidence.',
   },
   '/building/neraphis': {
     route: '/building/neraphis',

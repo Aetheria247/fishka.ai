@@ -297,9 +297,14 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
               <h3 className="card-title">WireWench</h3>
             </div>
             <p className="card-desc card-desc--tight">
-              Empirical auditing of API behavior, routing discrepancies, model
-              identity, and provider quirks—measuring the gap between documented
-              capabilities and observed runtime truth.
+              An AI response reveals what came back, but rarely everything that
+              happened along the way. Inspired by Wireshark, WireWench
+              investigates the infrastructure behind AI API connections: model
+              identity, inference configuration, provider routing, behavioral
+              changes, and data handling. Its objective is to make those
+              connections continuously inspectable, giving individuals the
+              evidence they need to understand—and make informed decisions
+              about—the services they&apos;re purchasing.
             </p>
             <div className="card-footer card-footer--end">
               <span className="cta-link">open lab note →</span>
