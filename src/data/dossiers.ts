@@ -24,6 +24,8 @@ export type EssayBlock =
   | { type: 'grid'; items: { num: string; title: string; body: string }[] }
   | { type: 'example'; paragraphs: string[] }
   | { type: 'links'; items: { system: string; route: string; body: string }[] }
+  | { type: 'diagram'; title: string; filename: string; ascii: string }
+  | { type: 'bullets'; items: { lead: string; body: string }[] }
 
 export interface EssaySection {
   heading: string
@@ -77,10 +79,12 @@ export interface DoingDossier {
   title: string
   subtitle: string
   metaRows: MetaRow[]
-  hypothesis: string
-  method: string[]
-  observations: string[]
-  resultsAndQuestions: { status: 'RESULT' | 'OPEN QUESTION'; tone: SemanticTone; text: string }[]
+  intro?: EssayBlock[]
+  sections?: EssaySection[]
+  hypothesis?: string
+  method?: string[]
+  observations?: string[]
+  resultsAndQuestions?: { status: 'RESULT' | 'OPEN QUESTION'; tone: SemanticTone; text: string }[]
   related: string[]
 }
 
@@ -696,43 +700,134 @@ export const DOSSIERS: Record<string, Dossier> = {
     status: '[ ACTIVE LAB ]',
     statusTone: 'media',
     title: 'Turing',
-    subtitle:
-      'Normalizing structural inconsistencies across AI clients, providers, endpoints, and models without reducing everything to the lowest common denominator.',
+    subtitle: 'Reasoning is a negotiation, not a field.',
     metaRows: [
-      { key: 'lab_track', value: '[ INTEROPERABILITY ]', tone: 'header' },
+      { key: 'lab_track', value: '[ INTEROPERABILITY · ADJACENT DIALECT ]', tone: 'header' },
       { key: 'status', value: '[ ACTIVE LAB ]', tone: 'media' },
-      { key: 'feeds_into', value: '[ DOTCHAT · THE GUILD ]', tone: 'neutral' },
+      { key: 'feeds_into', value: '[ DOTCHAT · NERAPHIS · THE GUILD ]', tone: 'neutral' },
     ],
-    hypothesis:
-      'If an individual wants true model sovereignty—switching seamlessly between local inference and multiple remote providers—the adapter layer must separate universal conversation semantics from provider-specific quirks rather than pretending every endpoint is "OpenAI-compatible."',
-    method: [
-      'Cataloged wire-level request/response payloads across local runners (llama.cpp, Ollama) and hosted APIs (Anthropic, OpenAI, Google, OpenRouter).',
-      'Built a minimal canonical envelope for messages, tool calls, reasoning traces, and usage telemetry, then tested round-trip fidelity when switching providers mid-thread.',
-      'Documented every silent mismatch: system-role placement, streaming delta chunking, finish_reason taxonomy, and tool-call ID constraints.',
-    ],
-    observations: [
-      '"OpenAI-compatible" endpoints routinely diverge on subtle fields—especially tool-call streaming deltas, strict JSON schema enforcement, and empty content blocks.',
-      'Reasoning/thinking tokens are exposed in at least four incompatible shapes across providers, making naive UI rendering brittle.',
-      'Flattening everything into plain text loses critical metadata needed for cost accounting, context planning, and deterministic replay.',
-    ],
-    resultsAndQuestions: [
+    intro: [
       {
-        status: 'RESULT',
-        tone: 'media',
-        text: 'A layered capability matrix (core envelope + typed provider extensions) preserves fidelity without leaking provider boilerplate into UI components.',
+        type: 'p',
+        text: 'When a new model releases, a familiar failure pattern often appears across third-party applications.',
       },
       {
-        status: 'OPEN QUESTION',
-        tone: 'note',
-        text: 'How should multi-turn reasoning traces be represented when a user switches from a reasoning model to a non-reasoning model mid-conversation?',
+        type: 'p',
+        text: 'Output arrives garbled. Thinking blocks spill into the main reply or disappear altogether. Requests fail with opaque error codes. Developers respond by patching adapters by hand and shipping reactive updates for each release.',
       },
       {
-        status: 'OPEN QUESTION',
-        tone: 'note',
-        text: 'What is the cleanest way to surface unsupported parameter warnings (e.g., temperature ignored) without cluttering normal chat flow?',
+        type: 'p',
+        text: "Eventually I asked a simpler question: **what if I didn't have to keep patching around it?**",
       },
     ],
-    related: ['/doing/wirewench', '/building/dotchat', '/thinking/care-benchmark'],
+    sections: [
+      {
+        heading: '// WHY TURING',
+        blocks: [
+          { type: 'standout', text: '“To program is to reprogram.”' },
+          {
+            type: 'p',
+            text: 'Turing takes its name from that underlying principle. Rather than overwriting chat templates or assuming every backend conforms to a single universal schema, Turing builds an **adjacent dialect**—a translation layer that captures how a specific model and route actually behave, stores that specification cleanly, and reapplies it without altering the underlying template.',
+          },
+        ],
+      },
+      {
+        heading: '// NOISE AT EVERY HOP',
+        blocks: [
+          {
+            type: 'p',
+            text: 'In modern AI interoperability, a response rarely travels directly from a model to the screen.',
+          },
+          {
+            type: 'diagram',
+            title: 'TURING // MULTI-HOP NORMALIZATION CHAIN',
+            filename: 'hop-chain.txt',
+            ascii: `  [ client ] ──► [ API provider ] ──► [ model host ] ──► [ model ]
+      ▲                ▲                    ▲                ▲
+   normalizes      normalizes           normalizes       emits raw`,
+          },
+          {
+            type: 'p',
+            text: 'Every hop in that chain introduces noise. Each layer follows its own conventions and attempts to normalize data at its own stage. A gateway rewrites a parameter, a host wraps a reasoning block differently, or a model changes how it delimits thinking. Any mismatch along the path can disrupt the entire exchange.',
+          },
+          { type: 'standout', text: 'Reasoning is a negotiation, not a field.' },
+          {
+            type: 'p',
+            text: 'Treating reasoning as a single predictable field (`delta.reasoning`, `thinking`, or `content`) leaves the client exposed whenever an upstream hop shifts. Turing begins by establishing what the client expects, then works outward across the chain to verify how each layer is actually connected.',
+          },
+        ],
+      },
+      {
+        heading: '// CALIBRATION VS. RUNTIME',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Negotiation in Turing does not happen dynamically on every request.',
+          },
+          {
+            type: 'p',
+            text: 'Separating calibration from execution is central to the design. **Calibration** is a deliberate, bounded process invoked when adding a route or investigating persistent drift—reconciling evidence from the live wire, declared provider metadata, and external documentation to produce a versioned dialect artifact.',
+          },
+          {
+            type: 'p',
+            text: '**Runtime execution** remains strictly deterministic: on the hot path, Turing reads the stored dialect and decodes the stream directly, with no live negotiation overhead.',
+          },
+        ],
+      },
+      {
+        heading: '// FINDING THE RECIPE',
+        blocks: [
+          {
+            type: 'p',
+            text: 'The architecture did not begin as an abstract specification. It began with a single concrete integration.',
+          },
+          {
+            type: 'p',
+            text: 'We took one provider, hardcoded the behavior, and tested until it worked reliably. Then we stepped back and asked two questions: *what did we actually need to know to make that work?* And *how can that knowledge be stored and updated reliably?*',
+          },
+          {
+            type: 'p',
+            text: 'Once we had the recipe, the automation followed cleanly.',
+          },
+          {
+            type: 'bullets',
+            items: [
+              {
+                lead: 'Deterministic floor first.',
+                body: 'Known formats decode directly on the hot path; unrecognized formats fall back safely instead of blanking out or corrupting the response.',
+              },
+              {
+                lead: 'Evidence over guesswork.',
+                body: 'Rather than auto-firing on transient provider anomalies, Turing treats the live wire, declared parameter metadata, and provider documentation as distinct witnesses—reserving heavier calibration for deliberate, persistent changes.',
+              },
+              {
+                lead: 'Two audiences, two flags.',
+                body: 'Some reasoning artifacts (such as readable summaries) are intended for the person (`reach_user`), while others (such as encrypted reasoning chains) are opaque to a human reader yet required verbatim by the model on subsequent turns (`reach_model`). Tracking those decisions independently preserves clarity for the human and continuity for the model.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: '// WORKING TODAY & WHERE IT GOES NEXT',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Today, Turing operates primarily on the client side of chat templates—ensuring reasoning traces, thinking blocks, and round-trip payloads are decoded, preserved, and rendered accurately without manual per-model patches.',
+          },
+          { type: 'standout', text: 'Next up: tool-use.' },
+          {
+            type: 'p',
+            text: "Many models ship capable native tool-use APIs, yet in practice reliable tool execution often requires connecting directly to a model's native endpoint rather than working through an aggregator, router, or proxy. The next phase of the lab extends Turing's adjacent-dialect approach to negotiate through that multi-hop noise so native tool-use connects reliably across the full chain.",
+          },
+        ],
+      },
+    ],
+    related: [
+      '/thinking/interior-exterior-customers',
+      '/doing/wirewench',
+      '/building/dotchat',
+    ],
   },
 
   '/doing/document-processing': {
@@ -1031,7 +1126,7 @@ export const ROUTE_SUMMARIES: Record<string, RouteSummary> = {
     section: 'doing',
     tag: 'DOING // LAB',
     title: 'Turing',
-    desc: 'Normalizing inconsistencies across clients, providers, endpoints, and models.',
+    desc: 'Reasoning is a negotiation, not a field — modeling multi-hop AI interoperability as an adjacent dialect.',
   },
   '/doing/document-processing': {
     route: '/doing/document-processing',

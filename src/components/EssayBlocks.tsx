@@ -84,6 +84,34 @@ export function EssayBlocks({ blocks, onNavigate }: EssayBlocksProps) {
           )
         }
 
+        if (block.type === 'diagram') {
+          return (
+            <div key={`diagram-${idx}`} className="walled-viewport">
+              <div className="walled-bar">
+                <span>{block.title}</span>
+                <span>{block.filename}</span>
+              </div>
+              <pre className="walled-pre">{block.ascii}</pre>
+            </div>
+          )
+        }
+
+        if (block.type === 'bullets') {
+          return (
+            <ul key={`bullets-${idx}`} className="obs-list">
+              {block.items.map((item) => (
+                <li key={item.lead}>
+                  <span className="obs-bullet">›</span>
+                  <span>
+                    <strong>{item.lead}</strong>{' '}
+                    <RichText text={item.body} onNavigate={onNavigate} />
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
         return null
       })}
     </div>

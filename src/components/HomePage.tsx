@@ -242,10 +242,12 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
               <h3 className="card-title">Turing</h3>
             </div>
             <p className="card-desc card-desc--tight">
-              Investigating interoperability across the AI ecosystem: how to
-              normalize structural inconsistencies between clients, providers,
-              endpoints, streaming formats, and models without flattening away
-              useful capabilities.
+              When new models release, third-party applications frequently
+              break—producing garbled output, misplaced thinking blocks, or
+              opaque errors that require manual patches. Turing investigates an
+              alternative: modeling the translation across client, provider,
+              host, and model as an adjacent dialect that can be calibrated
+              deliberately, stored cleanly, and executed deterministically.
             </p>
             <div className="card-footer card-footer--end">
               <span className="cta-link">open lab note →</span>

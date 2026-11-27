@@ -7,12 +7,12 @@ interface RichTextProps {
 
 /**
  * Lightweight inline formatter for editorial copy.
- * Supports **bold**, *italic*, and [label](/internal/route) links
+ * Supports **bold**, *italic*, `inline code`, and [label](/internal/route) links
  * without raw HTML injection.
  */
 export function RichText({ text, onNavigate }: RichTextProps) {
   const nodes: ReactNode[] = []
-  const pattern = /(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\(\/[^)]+\))/g
+  const pattern = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\(\/[^)]+\))/g
   let lastIndex = 0
   let match: RegExpExecArray | null
 
@@ -28,6 +28,8 @@ export function RichText({ text, onNavigate }: RichTextProps) {
       nodes.push(<strong key={key}>{token.slice(2, -2)}</strong>)
     } else if (token.startsWith('*') && token.endsWith('*')) {
       nodes.push(<em key={key}>{token.slice(1, -1)}</em>)
+    } else if (token.startsWith('`') && token.endsWith('`')) {
+      nodes.push(<code key={key}>{token.slice(1, -1)}</code>)
     } else if (token.startsWith('[')) {
       const linkMatch = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(token)
       if (linkMatch) {

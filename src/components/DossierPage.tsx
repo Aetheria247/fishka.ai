@@ -116,48 +116,71 @@ export function DossierPage({
               </div>
             </header>
 
-            <section className="hypothesis-box">
-              <h2 className="dossier-h2">// HYPOTHESIS</h2>
-              <p>{dossier.hypothesis}</p>
-            </section>
+            {dossier.intro ? (
+              <section className="dossier-section">
+                <EssayBlocks blocks={dossier.intro} onNavigate={onNavigate} />
+              </section>
+            ) : null}
 
-            <section className="dossier-section">
-              <h2 className="dossier-h2">// EXPERIMENT &amp; METHOD</h2>
-              <ol className="step-list">
-                {dossier.method.map((step, idx) => (
-                  <li key={step.slice(0, 24)} className="step-item">
-                    <span className="step-num">0{idx + 1}</span>
-                    <span>{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </section>
+            {dossier.sections
+              ? dossier.sections.map((sec) => (
+                  <section key={sec.heading} className="dossier-section">
+                    <h2 className="dossier-h2">{sec.heading}</h2>
+                    <EssayBlocks blocks={sec.blocks} onNavigate={onNavigate} />
+                  </section>
+                ))
+              : null}
 
-            <section className="dossier-section">
-              <h2 className="dossier-h2">// OBSERVATIONS</h2>
-              <ul className="obs-list">
-                {dossier.observations.map((obs) => (
-                  <li key={obs.slice(0, 24)}>
-                    <span className="obs-bullet">›</span>
-                    <span>{obs}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
+            {dossier.hypothesis ? (
+              <section className="hypothesis-box">
+                <h2 className="dossier-h2">// HYPOTHESIS</h2>
+                <p>{dossier.hypothesis}</p>
+              </section>
+            ) : null}
 
-            <section className="dossier-section">
-              <h2 className="dossier-h2">// RESULTS &amp; OPEN QUESTIONS</h2>
-              <div className="card-stack">
-                {dossier.resultsAndQuestions.map((rq) => (
-                  <div key={rq.text.slice(0, 24)} className="rq-card">
-                    <div className={`rq-badge tone-${rq.tone}`}>
-                      [ {rq.status} ]
+            {dossier.method ? (
+              <section className="dossier-section">
+                <h2 className="dossier-h2">// EXPERIMENT &amp; METHOD</h2>
+                <ol className="step-list">
+                  {dossier.method.map((step, idx) => (
+                    <li key={step.slice(0, 24)} className="step-item">
+                      <span className="step-num">0{idx + 1}</span>
+                      <span>{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ) : null}
+
+            {dossier.observations ? (
+              <section className="dossier-section">
+                <h2 className="dossier-h2">// OBSERVATIONS</h2>
+                <ul className="obs-list">
+                  {dossier.observations.map((obs) => (
+                    <li key={obs.slice(0, 24)}>
+                      <span className="obs-bullet">›</span>
+                      <span>{obs}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {dossier.resultsAndQuestions ? (
+              <section className="dossier-section">
+                <h2 className="dossier-h2">// RESULTS &amp; OPEN QUESTIONS</h2>
+                <div className="card-stack">
+                  {dossier.resultsAndQuestions.map((rq) => (
+                    <div key={rq.text.slice(0, 24)} className="rq-card">
+                      <div className={`rq-badge tone-${rq.tone}`}>
+                        [ {rq.status} ]
+                      </div>
+                      <p className="rq-text">{rq.text}</p>
                     </div>
-                    <p className="rq-text">{rq.text}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
+                  ))}
+                </div>
+              </section>
+            ) : null}
           </>
         ) : null}
 
