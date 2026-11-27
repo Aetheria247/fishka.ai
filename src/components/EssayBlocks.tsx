@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react'
-import type { EssayBlock } from '../data/dossiers'
+import { statusToneFor, type EssayBlock } from '../data/dossiers'
 import { RichText } from './RichText'
 
 interface EssayBlocksProps {
@@ -30,6 +30,21 @@ export function EssayBlocks({ blocks, onNavigate }: EssayBlocksProps) {
             <p key={`standout-${idx}`} className="essay-standout">
               <RichText text={block.text} onNavigate={onNavigate} />
             </p>
+          )
+        }
+
+        if (block.type === 'callout') {
+          const tone = block.tone ?? 'header'
+          return (
+            <blockquote
+              key={`callout-${idx}`}
+              className={`law-callout law-callout--${tone}`}
+            >
+              {block.label ? (
+                <div className={`law-discipline tone-${tone}`}>{block.label}</div>
+              ) : null}
+              <p className="law-quote">“{block.quote}”</p>
+            </blockquote>
           )
         }
 
@@ -130,6 +145,37 @@ export function EssayBlocks({ blocks, onNavigate }: EssayBlocksProps) {
                   </div>
                 </div>
               ))}
+            </div>
+          )
+        }
+
+        if (block.type === 'capabilities') {
+          const tone = block.tone ?? 'header'
+          return (
+            <div key={`caps-${idx}`} className="essay-links">
+              <div className="dossier-h2-row" style={{ marginBottom: '0.6rem' }}>
+                <span className="telemetry-heading" style={{ marginBottom: 0 }}>
+                  capability_status
+                </span>
+                <div className="status-legend">
+                  <span className="tone-media">● WORKING</span>
+                  <span className="tone-note">● EXPERIMENTAL</span>
+                  <span className="tone-meta">● PLANNED</span>
+                </div>
+              </div>
+              <div className={`telemetry-box telemetry-box--${tone} telemetry-box--flush`}>
+                {block.items.map((cap) => (
+                  <div key={cap.name} className="cap-status-row">
+                    <div className="cap-status-main">
+                      <span className="cap-status-name">{cap.name}</span>
+                      <span className={`cap-status-badge tone-${statusToneFor(cap.status)}`}>
+                        [ {cap.status} ]
+                      </span>
+                    </div>
+                    {cap.note ? <div className="cap-status-note">{cap.note}</div> : null}
+                  </div>
+                ))}
+              </div>
             </div>
           )
         }

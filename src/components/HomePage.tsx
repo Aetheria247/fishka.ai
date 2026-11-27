@@ -331,34 +331,39 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
         </div>
 
         <div className="card-stack card-stack--lg">
-          <a {...linkCardProps('/building/neraphis')}>
+          <a {...linkCardProps('/building/neraphis', 'dossier-card--truth')}>
             <div className="card-top">
               <div className="card-title-group">
                 <h3 className="card-title">Neraphis</h3>
-                <span className="card-pillar">— Continuity</span>
+                <span className="card-pillar tone-truth">— Continuity</span>
               </div>
               <span className="route-slug">/building/neraphis</span>
             </div>
 
             <p className="card-desc">
-              Personal memory architecture focused on assertion identity,
-              provenance, revision history, retrieval, and individual control over
-              what an AI knows—and what it is allowed to forget.
+              Memory is not simply a record of what has been said. It is the
+              context that allows previous experiences, established knowledge,
+              and ongoing work to inform what happens next. Neraphis explores
+              persistent, individual AI memory through structured knowledge,
+              evidence-based claim graduation, contextual retrieval, and
+              scheduled consolidation—building toward continuity that can
+              survive changes in models, conversations, and platforms without
+              surrendering control of that history.
             </p>
 
-            <div className="telemetry-box telemetry-box--header">
+            <div className="telemetry-box telemetry-box--truth">
               <DottedLeader
-                label="assertion_identity & yaml_slices"
+                label="standalone_memory_&_retrieval"
                 value="[ WORKING ]"
                 tone={statusToneFor('WORKING')}
               />
               <DottedLeader
-                label="provenance_revision_graph"
+                label="memorynodes_&_claim_graduation"
                 value="[ EXPERIMENTAL ]"
                 tone={statusToneFor('EXPERIMENTAL')}
               />
               <DottedLeader
-                label="cross_client_sync_protocol"
+                label="tool_mediated_access_&_dotchat"
                 value="[ PLANNED ]"
                 tone={statusToneFor('PLANNED')}
               />
@@ -366,7 +371,7 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
 
             <div className="card-footer">
               <span className="card-stack-meta">
-                Python · SQLite · YAML · Provenance
+                Python · SQLite · Qdrant · Markdown MemoryNodes
               </span>
               <span className="cta-link">inspect architecture →</span>
             </div>

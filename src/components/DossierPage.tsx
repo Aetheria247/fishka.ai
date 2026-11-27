@@ -187,72 +187,111 @@ export function DossierPage({
         {dossier.kind === 'building' ? (
           <>
             <header className="dossier-head">
-              <div className="dossier-eyebrow">{dossier.eyebrow}</div>
+              <div className={`dossier-eyebrow tone-${dossier.pillarTone}`}>
+                {dossier.eyebrow}
+              </div>
               <h1 className="dossier-h1">{dossier.title}</h1>
               <p className="dossier-subtitle">{dossier.pillar}</p>
+              {dossier.metaRows ? (
+                <div
+                  className={`telemetry-box telemetry-box--${dossier.pillarTone} telemetry-box--flush`}
+                >
+                  {dossier.metaRows.map((row) => (
+                    <DottedLeader
+                      key={row.key}
+                      label={row.key}
+                      value={row.value}
+                      tone={row.tone}
+                    />
+                  ))}
+                </div>
+              ) : null}
             </header>
 
-            <section className="dossier-section">
-              <div className="dossier-h2-row">
-                <h2 className="dossier-h2">// CAPABILITY STATUS TABLE</h2>
-                <div className="status-legend">
-                  <span className="tone-media">● WORKING</span>
-                  <span className="tone-note">● EXPERIMENTAL</span>
-                  <span className="tone-meta">● PLANNED</span>
-                </div>
-              </div>
-              <div
-                className={`telemetry-box telemetry-box--${dossier.pillarTone} telemetry-box--flush`}
-              >
-                {dossier.capabilities.map((cap) => (
-                  <DottedLeader
-                    key={cap.name}
-                    label={cap.name}
-                    labelBright
-                    value={`[ ${cap.status} ]`}
-                    tone={statusToneFor(cap.status)}
-                  />
-                ))}
-              </div>
-            </section>
+            {dossier.intro ? (
+              <section className="dossier-section">
+                <EssayBlocks blocks={dossier.intro} onNavigate={onNavigate} />
+              </section>
+            ) : null}
 
-            <section className="dossier-section">
-              <h2 className="dossier-h2">// SYSTEM ARCHITECTURE</h2>
-              <div className="walled-viewport">
-                <div className="walled-bar">
-                  <span>{dossier.diagramTitle}</span>
-                  <span>diagram.txt</span>
-                </div>
-                <pre className="walled-pre">{dossier.diagramAscii}</pre>
-              </div>
-            </section>
+            {dossier.sections
+              ? dossier.sections.map((sec) => (
+                  <section key={sec.heading} className="dossier-section">
+                    <h2 className="dossier-h2">{sec.heading}</h2>
+                    <EssayBlocks blocks={sec.blocks} onNavigate={onNavigate} />
+                  </section>
+                ))
+              : null}
 
-            <section className="dossier-section">
-              <h2 className="dossier-h2">// KEY ENGINEERING DECISIONS</h2>
-              <div className="card-stack">
-                {dossier.decisions.map((dec, idx) => (
-                  <div key={dec.title} className="decision-card">
-                    <h3 className="decision-title">
-                      <span className="decision-idx">0{idx + 1}.</span>
-                      {dec.title}
-                    </h3>
-                    <p className="decision-body">{dec.body}</p>
+            {dossier.capabilities ? (
+              <section className="dossier-section">
+                <div className="dossier-h2-row">
+                  <h2 className="dossier-h2">// CAPABILITY STATUS TABLE</h2>
+                  <div className="status-legend">
+                    <span className="tone-media">● WORKING</span>
+                    <span className="tone-note">● EXPERIMENTAL</span>
+                    <span className="tone-meta">● PLANNED</span>
                   </div>
-                ))}
-              </div>
-            </section>
+                </div>
+                <div
+                  className={`telemetry-box telemetry-box--${dossier.pillarTone} telemetry-box--flush`}
+                >
+                  {dossier.capabilities.map((cap) => (
+                    <DottedLeader
+                      key={cap.name}
+                      label={cap.name}
+                      labelBright
+                      value={`[ ${cap.status} ]`}
+                      tone={statusToneFor(cap.status)}
+                    />
+                  ))}
+                </div>
+              </section>
+            ) : null}
 
-            <section className="dossier-section">
-              <h2 className="dossier-h2">// INTERFACE &amp; DEMONSTRATION</h2>
-              <div className="media-frame">
-                <span className={`media-frame-label tone-${dossier.pillarTone}`}>
-                  {dossier.demoLabel}
-                </span>
-                <span className="media-frame-sub">
-                  Drop-in slot for live screenshots, recordings, or interactive widgets
-                </span>
-              </div>
-            </section>
+            {dossier.diagramAscii && dossier.diagramTitle ? (
+              <section className="dossier-section">
+                <h2 className="dossier-h2">// SYSTEM ARCHITECTURE</h2>
+                <div className="walled-viewport">
+                  <div className="walled-bar">
+                    <span>{dossier.diagramTitle}</span>
+                    <span>diagram.txt</span>
+                  </div>
+                  <pre className="walled-pre">{dossier.diagramAscii}</pre>
+                </div>
+              </section>
+            ) : null}
+
+            {dossier.decisions ? (
+              <section className="dossier-section">
+                <h2 className="dossier-h2">// KEY ENGINEERING DECISIONS</h2>
+                <div className="card-stack">
+                  {dossier.decisions.map((dec, idx) => (
+                    <div key={dec.title} className="decision-card">
+                      <h3 className="decision-title">
+                        <span className="decision-idx">0{idx + 1}.</span>
+                        {dec.title}
+                      </h3>
+                      <p className="decision-body">{dec.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {dossier.demoLabel ? (
+              <section className="dossier-section">
+                <h2 className="dossier-h2">// INTERFACE &amp; DEMONSTRATION</h2>
+                <div className="media-frame">
+                  <span className={`media-frame-label tone-${dossier.pillarTone}`}>
+                    {dossier.demoLabel}
+                  </span>
+                  <span className="media-frame-sub">
+                    Drop-in slot for live screenshots, recordings, or interactive widgets
+                  </span>
+                </div>
+              </section>
+            ) : null}
           </>
         ) : null}
       </article>
