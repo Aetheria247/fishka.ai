@@ -268,10 +268,15 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
               <h3 className="card-title">Document Processing</h3>
             </div>
             <p className="card-desc card-desc--tight">
-              Exploring how to reliably transform messy, heterogeneous human
-              documents into clean, inspectable structures—including the YAML
-              slices shared across .dotChat and Neraphis—that both deterministic
-              code and language models can actually use.
+              Attaching a document to an AI conversation often means introducing
+              a large amount of temporary context, even when only a small
+              portion is relevant. Building on Neraphis&apos;s structured
+              Markdown architecture, Document Processing explores a more
+              efficient approach: organizing source material into navigable
+              sidecars, checking for content drift, and retrieving individual
+              sections on demand. The result is reusable document context
+              without requiring embeddings or repeatedly loading entire files
+              into the conversation.
             </p>
             <div className="card-footer card-footer--end">
               <span className="cta-link">open lab note →</span>

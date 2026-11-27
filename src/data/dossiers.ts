@@ -26,6 +26,7 @@ export type EssayBlock =
   | { type: 'links'; items: { system: string; route: string; body: string }[] }
   | { type: 'diagram'; title: string; filename: string; ascii: string }
   | { type: 'bullets'; items: { lead: string; body: string }[] }
+  | { type: 'stages'; items: { num: string; title: string; paragraphs: string[] }[] }
 
 export interface EssaySection {
   heading: string
@@ -843,39 +844,218 @@ export const DOSSIERS: Record<string, Dossier> = {
     statusTone: 'media',
     title: 'Document Processing',
     subtitle:
-      'Transforming complex, heterogeneous human information into compact, inspectable structures—like YAML slices—that both software and models can reliably use.',
+      'Structured Markdown sidecars, deterministic fidelity verification, and selective context retrieval.',
     metaRows: [
-      { key: 'lab_track', value: '[ STRUCTURED DATA ]', tone: 'media' },
+      { key: 'lab_track', value: '[ STRUCTURED SIDECARS · TOC RETRIEVAL ]', tone: 'media' },
       { key: 'status', value: '[ ACTIVE LAB ]', tone: 'media' },
-      { key: 'feeds_into', value: '[ NERAPHIS · DOTCHAT ]', tone: 'neutral' },
+      { key: 'feeds_into', value: '[ DOTCHAT · NERAPHIS ]', tone: 'neutral' },
     ],
-    hypothesis:
-      'Naive fixed-size text chunking destroys the hierarchy and intent of real-world documents. Transforming heterogeneous inputs into explicit, human-readable YAML slices preserves structural provenance and dramatically improves both deterministic parsing and LLM reasoning.',
-    method: [
-      'Tested ingestion pipelines against real personal archives: mixed Markdown notes, multi-column PDFs, chat exports, configuration files, and messy email threads.',
-      'Designed canonical YAML slice schemas that retain parent-section anchors, timestamps, source hashes, and explicit entity/claim boundaries.',
-      'Compared retrieval precision and model hallucination rates between raw vector chunks and structured YAML slices inside Neraphis and dotChat context plans.',
-    ],
-    observations: [
-      'YAML hits a rare sweet spot: compact enough to respect token budgets, strict enough for deterministic validators, and readable enough for a human to audit in a text editor.',
-      'Preserving "where this came from" (file path, heading stack, date) prevents models from conflating superseded drafts with current decisions.',
-      'Heterogeneous PDFs still require a multi-stage fallback—layout-aware extraction first, flagging low-confidence tables rather than silently mangling numbers.',
-    ],
-    resultsAndQuestions: [
+    intro: [
       {
-        status: 'RESULT',
-        tone: 'media',
-        text: 'YAML slice contracts are now shared across dotChat context attachments and Neraphis memory ingestion.',
+        type: 'p',
+        text: 'Making a document available to an AI is not the same as making its information reliably accessible.',
+      },
+      { type: 'p', text: 'Documents introduce two distinct problems.' },
+      {
+        type: 'p',
+        text: 'The first is extraction. Real-world files, particularly PDFs, may contain malformed text, duplicated lines, inconsistent layouts, or pages rendered entirely as images. Even before a model encounters the content, the information may have been altered or lost during extraction.',
       },
       {
-        status: 'OPEN QUESTION',
-        tone: 'note',
-        text: 'Where is the optimal boundary between deterministic regex/AST structural parsing and lightweight local-model semantic normalization?',
+        type: 'p',
+        text: 'The second is persistence. In many chat workflows, extracted documents are introduced as large blocks of conversation context. This makes the information immediately available, but creates a dependence on the context window. As conversations grow, previously supplied material may be truncated or become inaccessible, requiring the person to provide it again.',
       },
       {
-        status: 'OPEN QUESTION',
-        tone: 'note',
-        text: 'How should conflicting assertions extracted from two different document versions be surfaced for human reconciliation?',
+        type: 'p',
+        text: 'Document Processing investigates an alternative: **structure reference material once, preserve its relationship to the source, and retrieve only the information needed for the current interaction.**',
+      },
+      {
+        type: 'p',
+        text: 'The objective is to make documents durable, navigable resources rather than temporary additions to a conversation.',
+      },
+    ],
+    sections: [
+      {
+        heading: '// THE NERAPHIS LINEAGE',
+        blocks: [
+          {
+            type: 'p',
+            text: "The underlying design originated in Neraphis's Node database architecture.",
+          },
+          {
+            type: 'p',
+            text: "Neraphis organizes durable knowledge as lightweight Markdown documents with structured frontmatter, headings, and navigable relationships. This allows information to remain inspectable and accessible without requiring the entire knowledge collection to be loaded into a model's context.",
+          },
+          {
+            type: 'p',
+            text: 'Document Processing adapts that approach to files attached within .dotChat.',
+          },
+          {
+            type: 'p',
+            text: 'Rather than repeatedly introducing an entire document into a conversation, the system creates a structured Markdown sidecar during ingestion. The sidecar provides a navigable representation of the source while preserving its extracted content for subsequent retrieval.',
+          },
+          {
+            type: 'p',
+            text: 'The same structural principles used to organize long-lived knowledge can therefore support document access within an individual workspace.',
+          },
+        ],
+      },
+      {
+        heading: '// THE INGESTION PIPELINE',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Document Processing separates ingestion, verification, and retrieval into distinct stages.',
+          },
+          {
+            type: 'stages',
+            items: [
+              {
+                num: '01',
+                title: 'File classification',
+                paragraphs: [
+                  'The pipeline begins by identifying the type of information being processed.',
+                  'Prose-oriented formats such as PDF, DOCX, Markdown, and plain text are candidates for structural processing.',
+                  'Syntactic and columnar formats—including JSON, CSV, YAML, and logs—bypass the structuring pass. Their original organization is retained through the flat-injection path rather than being rewritten into prose-oriented sections.',
+                  'Files without an extractable text layer, including image-only PDFs, are identified as unsupported by the text-extraction path rather than silently converted into incomplete structures.',
+                ],
+              },
+              {
+                num: '02',
+                title: 'One-time structural processing',
+                paragraphs: [
+                  'A dedicated utility connection, `@structurer`, analyzes the extracted text and introduces a navigable Markdown hierarchy.',
+                  'It may insert headings at appropriate structural boundaries and add concise `> tag:` descriptions explaining what each section contains.',
+                  'These descriptions provide a semantic guide to the document without replacing its contents.',
+                  'The distinction is intentional: the model may author navigation, but it is not authorized to rewrite the source body.',
+                ],
+              },
+              {
+                num: '03',
+                title: 'Deterministic fidelity verification',
+                paragraphs: [
+                  'The resulting sidecar is checked against the original extracted text before it is accepted.',
+                  'This verification separates the model-authored navigation from the source material and tests whether the original content has been preserved within the configured tolerance.',
+                  'When the check identifies unacceptable content drift, the structured sidecar is rejected in favor of the raw extraction.',
+                ],
+              },
+              {
+                num: '04',
+                title: 'Selective retrieval',
+                paragraphs: [
+                  'Once structured, the document can be accessed through a two-stage retrieval process.',
+                  "The first stage exposes its table of contents: headings and accompanying `> tag:` descriptions. This provides a compact overview of the document's organization and allows sections to be identified by their meaning.",
+                  'The second stage retrieves the body of a selected section.',
+                  'Only that section is introduced into the active conversation context, where it is available for the current turn. The full document remains accessible through the sidecar without becoming a permanent part of every subsequent request.',
+                  'This approach uses authored structural navigation rather than embedding-based similarity search.',
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: '// THE FIDELITY LOCK',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Using a language model to organize source material introduces an important risk: a structurally useful document may no longer faithfully represent the original.',
+          },
+          {
+            type: 'p',
+            text: 'A heading can be inferred incorrectly. A paragraph may be paraphrased. A qualifying statement may disappear during what appears to be routine cleanup.',
+          },
+          {
+            type: 'p',
+            text: 'When the resulting document is later retrieved as reference material, those alterations can be mistaken for source content.',
+          },
+          {
+            type: 'p',
+            text: 'Document Processing therefore establishes a strict boundary between two kinds of information:',
+          },
+          {
+            type: 'bullets',
+            items: [
+              {
+                lead: 'Authored navigation',
+                body: 'consists of the Markdown headings and `> tag:` descriptions introduced during structuring.',
+              },
+              {
+                lead: 'Source content',
+                body: 'consists of the extracted document body, which the structuring process is required to preserve.',
+              },
+            ],
+          },
+          {
+            type: 'p',
+            text: "The distinction is enforced beyond the model's instructions.",
+          },
+          {
+            type: 'p',
+            text: 'The deterministic verification implementation, `fidelity.ts`, removes the permitted structural additions from the generated sidecar, accounting for fenced code blocks so that code content is not misidentified as authored navigation.',
+          },
+          {
+            type: 'p',
+            text: 'It then compares the remaining content against the raw extraction using a verbatim word-containment measure.',
+          },
+          {
+            type: 'p',
+            text: 'If the measured drift exceeds tolerance, the result is flagged as `content_drift`, and the raw extraction takes precedence.',
+          },
+          {
+            type: 'p',
+            text: 'This is a safeguard against substantive rewriting, not a claim of byte-for-byte equivalence or perfect recovery from a damaged source.',
+          },
+          {
+            type: 'p',
+            text: 'The principle is that **a model may improve access to information without acquiring authority to change what the source says.**',
+          },
+        ],
+      },
+      {
+        heading: '// WORKING TODAY',
+        blocks: [
+          {
+            type: 'p',
+            text: 'The current .dotChat implementation includes the file-type ingestion gate, flat-injection fallback, the `@structurer` Markdown sidecar process, deterministic fidelity checking, and manual two-stage retrieval.',
+          },
+          {
+            type: 'p',
+            text: 'Together, these components establish a workflow in which document structure can be generated once, inspected, verified, and used to retrieve relevant context on demand.',
+          },
+        ],
+      },
+      {
+        heading: '// NEXT STEPS',
+        blocks: [
+          {
+            type: 'p',
+            text: 'The next development steps extend that workflow beyond individual chat attachments.',
+          },
+          {
+            type: 'p',
+            text: '**Directory- and SubDirectory-scoped persistence** will allow structured reference documents to exist at the workspace level. Documents relevant to an ongoing project can then remain available across conversations without requiring repeated uploads.',
+          },
+          {
+            type: 'p',
+            text: '**Controlled read and write tooling** will extend access beyond one-way retrieval, allowing authorized operations against the structured Markdown artifacts themselves.',
+          },
+          {
+            type: 'p',
+            text: 'These capabilities form the integration path between Neraphis and .dotChat.',
+          },
+          {
+            type: 'p',
+            text: 'Neraphis provides the architectural foundation for persistent, structured knowledge. Document Processing establishes the ingestion and navigation mechanisms. .dotChat provides the working environment in which people and models can access that information.',
+          },
+          {
+            type: 'p',
+            text: 'The larger goal is not simply to fit more material into a context window.',
+          },
+          {
+            type: 'standout',
+            text: "It is to make information reliably available when it is needed, without requiring the entire document to be present when it isn't.",
+          },
+        ],
       },
     ],
     related: ['/building/neraphis', '/building/dotchat', '/doing/turing'],
@@ -1133,7 +1313,7 @@ export const ROUTE_SUMMARIES: Record<string, RouteSummary> = {
     section: 'doing',
     tag: 'DOING // LAB',
     title: 'Document Processing',
-    desc: 'Turning heterogeneous documents into reliable, inspectable YAML slices.',
+    desc: 'Structured Markdown sidecars, deterministic fidelity verification, and selective section retrieval.',
   },
   '/doing/wirewench': {
     route: '/doing/wirewench',

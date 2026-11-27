@@ -1310,6 +1310,28 @@ code {
   gap: 0.9rem;
 }
 
+.stage-card {
+  background: var(--inset);
+  border: 1px solid var(--elevated);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.stage-head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.stage-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .inline-dossier-link {
   color: var(--link);
   border-bottom: 1px solid color-mix(in srgb, var(--link) 45%, transparent);
