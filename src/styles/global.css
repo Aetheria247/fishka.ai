@@ -663,11 +663,20 @@ code {
   color: var(--truth);
 }
 
+.dossier-card--chrome {
+  --glow: var(--chrome);
+}
+
+.dossier-card--chrome:hover .card-title {
+  color: var(--chrome);
+}
+
 .telemetry-box--header,
 .telemetry-box--media,
 .telemetry-box--wire,
 .telemetry-box--vault,
 .telemetry-box--truth,
+.telemetry-box--chrome,
 .telemetry-box--note {
   border-left: 3px solid var(--accent);
 }
@@ -677,6 +686,7 @@ code {
 .telemetry-box--wire   { --accent: var(--wire); }
 .telemetry-box--vault  { --accent: var(--vault); }
 .telemetry-box--truth  { --accent: var(--truth); }
+.telemetry-box--chrome { --accent: var(--chrome); }
 .telemetry-box--note   { --accent: var(--note); }
 
 .telemetry-box--flush {
@@ -1259,15 +1269,25 @@ code {
 }
 
 .law-callout--truth  { --glow: var(--truth); }
+.law-callout--chrome { --glow: var(--chrome); }
 .law-callout--vault  { --glow: var(--vault); }
 .law-callout--media  { --glow: var(--media); }
 .law-callout--wire   { --glow: var(--wire); }
 .law-callout--header { --glow: var(--header-1); }
 
 .law-callout--truth .law-discipline  { color: var(--truth); }
+.law-callout--chrome .law-discipline { color: var(--chrome); }
 .law-callout--vault .law-discipline  { color: var(--vault); }
 .law-callout--media .law-discipline  { color: var(--media); }
 .law-callout--wire .law-discipline   { color: var(--wire); }
+
+.law-sub {
+  margin: 0.7rem 0 0;
+  font-size: 0.92rem;
+  font-style: italic;
+  color: var(--secondary);
+  line-height: 1.62;
+}
 
 /* ── Structured Capability Status Rows (Building Dossiers) ── */
 .cap-status-row {

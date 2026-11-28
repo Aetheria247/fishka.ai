@@ -44,6 +44,7 @@ export function EssayBlocks({ blocks, onNavigate }: EssayBlocksProps) {
                 <div className={`law-discipline tone-${tone}`}>{block.label}</div>
               ) : null}
               <p className="law-quote">“{block.quote}”</p>
+              {block.sub ? <p className="law-sub">{block.sub}</p> : null}
             </blockquote>
           )
         }
@@ -118,7 +119,9 @@ export function EssayBlocks({ blocks, onNavigate }: EssayBlocksProps) {
                 <li key={item.lead}>
                   <span className="obs-bullet">›</span>
                   <span>
-                    <strong>{item.lead}</strong>{' '}
+                    <strong>
+                      <RichText text={item.lead} onNavigate={onNavigate} />
+                    </strong>{' '}
                     <RichText text={item.body} onNavigate={onNavigate} />
                   </span>
                 </li>

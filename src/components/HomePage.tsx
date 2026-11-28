@@ -377,34 +377,38 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
             </div>
           </a>
 
-          <a {...linkCardProps('/building/dotchat')}>
+          <a {...linkCardProps('/building/dotchat', 'dossier-card--chrome')}>
             <div className="card-top">
               <div className="card-title-group">
                 <h3 className="card-title">.dotChat</h3>
-                <span className="card-pillar">— Interaction</span>
+                <span className="card-pillar tone-chrome">— Interaction</span>
               </div>
               <span className="route-slug">/building/dotchat</span>
             </div>
 
             <p className="card-desc">
-              A local-first chat interface designed to give people direct
-              visibility into and control over their conversations, inherited
-              workspace context, model routing, and runtime environment.
+              Most AI chat apps let you swap models while locking the rest of
+              the workspace to one global setup. Inspired by Linux dotfiles,
+              .dotChat treats the workspace itself as a cascading configuration
+              system—letting you run distinct assistants with independent
+              environments, bind multi-key credentials from a local encrypted
+              Vault, inspect exact runtime state, and sync privately across
+              desktop and mobile without surrendering ownership of your data.
             </p>
 
-            <div className="telemetry-box telemetry-box--media">
+            <div className="telemetry-box telemetry-box--chrome">
               <DottedLeader
-                label="workspace_tree & dirrc_inheritance"
+                label="dotfile_cascade_&_opfs_pwa"
                 value="[ WORKING ]"
                 tone={statusToneFor('WORKING')}
               />
               <DottedLeader
-                label="runtime_truth & wire_diagnostics"
+                label="ghost_sync_&_hermes_bridge"
                 value="[ EXPERIMENTAL ]"
                 tone={statusToneFor('EXPERIMENTAL')}
               />
               <DottedLeader
-                label="tresk_multi_provider_routing"
+                label="neraphis_memory_integration"
                 value="[ PLANNED ]"
                 tone={statusToneFor('PLANNED')}
               />
@@ -412,7 +416,7 @@ export function HomePage({ onNavigate, onNavigateSection }: HomePageProps) {
 
             <div className="card-footer">
               <span className="card-stack-meta">
-                TypeScript · React · Local-First · Base16
+                TypeScript · Next.js · OPFS / PWA · Local Vault · Ghost-Sync
               </span>
               <span className="cta-link">inspect architecture →</span>
             </div>

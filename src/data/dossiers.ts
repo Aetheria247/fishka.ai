@@ -6,6 +6,7 @@ export type SemanticTone =
   | 'wire'
   | 'vault'
   | 'truth'
+  | 'chrome'
   | 'header'
   | 'error'
   | 'meta'
@@ -22,7 +23,7 @@ export interface MetaRow {
 export type EssayBlock =
   | { type: 'p'; text: string }
   | { type: 'standout'; text: string }
-  | { type: 'callout'; label?: string; quote: string; tone?: SemanticTone }
+  | { type: 'callout'; label?: string; quote: string; sub?: string; tone?: SemanticTone }
   | { type: 'grid'; items: { num: string; title: string; body: string }[] }
   | { type: 'example'; paragraphs: string[] }
   | { type: 'links'; items: { system: string; route: string; body: string }[] }
@@ -1725,50 +1726,229 @@ export const DOSSIERS: Record<string, Dossier> = {
     breadcrumb: 'fishka.ai / building / dotchat',
     eyebrow: '03 // BUILDING · INTERACTION',
     pillarTag: 'INTERACTION',
-    pillarTone: 'media',
+    pillarTone: 'chrome',
     title: '.dotChat',
-    pillar:
-      'Interaction — A local-first workspace giving people direct visibility into and control over conversations, context, models, and runtime environment.',
-    capabilities: [
-      { name: 'hierarchical_workspace_tree', status: 'WORKING' },
-      { name: 'dirrc_&_chatrc_config_inheritance', status: 'WORKING' },
-      { name: 'local_byok_keyring_&_vault', status: 'WORKING' },
-      { name: 'bubbleforge_base16_theming', status: 'WORKING' },
-      { name: 'runtime_truth_&_negotiation_wire', status: 'EXPERIMENTAL' },
-      { name: 'context_plan_token_budgeter', status: 'EXPERIMENTAL' },
-      { name: 'tresk_multi_provider_router', status: 'PLANNED' },
+    pillar: 'How you like to AI should be a configuration, not an ultimatum.',
+    metaRows: [
+      { key: 'pillar', value: '[ INTERACTION · LOCAL-FIRST WORKSPACE ]', tone: 'chrome' },
+      { key: 'substrate', value: '[ NEXT.JS · TYPESCRIPT · OPFS / PWA · SQLITE ]', tone: 'neutral' },
+      { key: 'integrates', value: '[ TURING · DOCUMENT PROCESSING · GHOST-SYNC ]', tone: 'media' },
     ],
-    diagramTitle: 'DOTCHAT // INHERITANCE & RUNTIME TRUTH',
-    diagramAscii: `  ~/.dotChat/
-  ├── .dirrc              (global defaults, keyring ref, theme)
-  └── workspace/
-      └── research/
-          ├── .dirrc      (overrides: local model + strict context)
-          └── 000.chatrc  (chat-level overrides & pinned YAML slices)
+    intro: [
+      {
+        type: 'p',
+        text: 'Most chat interfaces treat configuration as a single global sheet. Even when an app lets you switch models or save a prompt preset, the surrounding environment—tools, parameters, credentials, and visual rules—still behaves like one uniform product.',
+      },
+      {
+        type: 'p',
+        text: 'I wanted a workspace where I could run multiple assistants with completely different setups, control exactly how deeply each setting stuck, and carry that workspace across my computers and phone without handing private conversation history to a third-party cloud.',
+      },
+      {
+        type: 'p',
+        text: '`.dotChat` is the local-first interface built around those requirements.',
+      },
+    ],
+    sections: [
+      {
+        heading: '// CONFIGURATION AS AGENCY',
+        blocks: [
+          {
+            type: 'p',
+            text: '`.dotChat` is structured to read like a configuration system, not a flat list of threads.',
+          },
+          {
+            type: 'p',
+            text: "Conversations live inside a workspace tree (`Dir → SubDir → Chat`) backed by a three-tier dotfile cascade (`app.toml → .dirrc → .chatrc`). The point isn't folder organization—it's variability. Every setting is an explicit user control, and you decide whether a choice holds globally, scopes to a project directory, or overrides only a single chat.",
+          },
+          {
+            type: 'p',
+            text: "Control only counts when you can see what the system did with it. To deliver [CARE](/thinking/care-benchmark)'s **Clarity & Candor**, every resolved setting carries source attribution (**Anti-Mystery Inheritance**). Overridden values light up in Core Pink under the [Color Contract](/thinking/color-contract), backed by a live **Runtime Truth** panel showing the exact configuration governing the current turn.",
+          },
+        ],
+      },
+      {
+        heading: '// VAULT & KEYRING',
+        blocks: [
+          {
+            type: 'p',
+            text: 'Credential management separates secret storage from connection wiring.',
+          },
+          {
+            type: 'bullets',
+            items: [
+              {
+                lead: 'Vault:',
+                body: 'Stores API keys locally in an encrypted blob (`vault.enc`, XChaCha20 / Argon2id). Secrets stay on the server boundary and are never shipped to the browser client.',
+              },
+              {
+                lead: 'Keyring:',
+                body: 'References Vault entries by alias and capability rather than assuming one key per provider. You enter a credential once and bind it across as many connections, assistants, and utility roles as needed without duplicating secrets.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: '// BUILT FOR BOTH CUSTOMERS',
+        blocks: [
+          {
+            type: 'p',
+            text: "Rather than bolting on opaque plugins, `.dotChat`'s core capabilities were designed around [Interior and Exterior Customers](/thinking/interior-exterior-customers)—giving the model reliable working conditions while keeping every step inspectable for the person.",
+          },
+          {
+            type: 'bullets',
+            items: [
+              {
+                lead: '[Document Processing](/doing/document-processing):',
+                body: 'Converts attached prose files once at ingest into navigable Markdown sidecars verified by a deterministic Fidelity Lock. The model gets selective two-stage Table of Contents retrieval without flooding its context window; the person gets predictable, inspectable artifacts.',
+              },
+              {
+                lead: '[Turing](/doing/turing):',
+                body: 'Treats provider and model quirks as an adjacent dialect, separating calibration from deterministic hot-path decoding so reasoning blocks and round-trip state stay intact.',
+              },
+              {
+                lead: 'Ask-a-Guy Adapters:',
+                body: 'Delegates specialized external tasks—like web research via AskGrok or image generation—through capability-bound utility connections instead of brittle built-in scrapers. External web packets cross an explicit untrusted-context boundary and render alongside tool, attachment, and routing activity in one unified trace stream.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: '// GHOST-SYNC: PRIVATE MULTI-DEVICE REPLICATION',
+        blocks: [
+          {
+            type: 'p',
+            text: "Private sync across desktop, laptop, and phone is one of the biggest missing pieces in self-hosted AI tools. **Ghost-Sync** (`packages/ghost-sync`) is `.dotChat`'s approach: a distributed user storage pool designed so devices stay synchronized without any central relay retaining readable user data.",
+          },
+          {
+            type: 'p',
+            text: 'Rather than inventing a new sync theory from scratch, Ghost-Sync borrows three proven legacy primitives—each doing one well-understood job:',
+          },
+          {
+            type: 'bullets',
+            items: [
+              {
+                lead: 'IRC-style live fanout:',
+                body: 'Pushes new encrypted events immediately to all currently online device spools.',
+              },
+              {
+                lead: 'Usenet-style backfill:',
+                body: 'Reconciles missed history asynchronously so an offline device catches up cleanly when it reconnects.',
+              },
+              {
+                lead: 'Hash-chained ordering (blockchain primitive):',
+                body: 'Preserves deterministic sequence and integrity across concurrent writers without mutating prior history.',
+              },
+            ],
+          },
+          {
+            type: 'p',
+            text: "Paired with `.dotChat`'s local-first OPFS mirror and installable PWA frontend, Ghost-Sync builds the foundation for private multi-device continuity—and clears the runway for [Neraphis](/building/neraphis).",
+          },
+          {
+            type: 'callout',
+            label: '// DESIGN BOUNDARY',
+            quote:
+              '.dotChat defines the environment for AI interaction without prescribing what that interaction must be.',
+            sub: 'Neraphis preserves the context; .dotChat configures the environment. The individual retains authority over both.',
+            tone: 'chrome',
+          },
+        ],
+      },
+      {
+        heading: '// SYSTEM ARCHITECTURE & CAPABILITY STATUS',
+        blocks: [
+          {
+            type: 'capabilities',
+            tone: 'chrome',
+            items: [
+              {
+                name: 'Workspace tree, .dirrc / .chatrc cascade & Anti-Mystery attribution',
+                status: 'WORKING',
+                note: 'Canonical filesystem + rebuildable SQLite index',
+              },
+              {
+                name: 'Local-first OPFS mirror & installable PWA webapp',
+                status: 'WORKING',
+                note: 'Desktop and mobile browser install',
+              },
+              {
+                name: 'Encrypted Vault (vault.enc) & multi-key Keyring',
+                status: 'WORKING',
+                note: 'Add once, bind by alias across connections',
+              },
+              {
+                name: 'Document Processing, Turing codec & Ask-a-Guy adapters',
+                status: 'WORKING',
+                note: 'Unified trace stream + Runtime Truth',
+              },
+              {
+                name: 'Hermes × .dotChat dialect bridge',
+                status: 'EXPERIMENTAL',
+                note: 'Live implementation; pending end-to-end verification',
+              },
+              {
+                name: 'Ghost-Sync encrypted multi-device replication',
+                status: 'EXPERIMENTAL',
+                note: 'Mid-build: wire codecs, sealing, reconciliation & multi-writer pipe',
+              },
+              {
+                name: 'Neraphis memory integration',
+                status: 'PLANNED',
+                note: 'Queued behind Ghost-Sync completion',
+              },
+            ],
+          },
+          {
+            type: 'diagram',
+            title: 'DOTCHAT // WORKSPACE CASCADE & GHOST-SYNC',
+            filename: 'diagram.txt',
+            ascii: `  ~/.dotChat/
+  ├── app.toml                    (global defaults)
+  ├── keyring/vault.enc           (encrypted secrets — add once, bind by alias)
+  └── chats/<dir>/
+      ├── .dirrc                  (project-scoped config overrides)
+      └── <chat>.chat/
+          ├── .chatrc             (chat-level overrides)
+          ├── messages.jsonl      (append-only ledger — disk is truth)
+          └── traces/             (Turing · Document Processing · Ask-a-Guy)
                  │
                  ▼
      ┌───────────────────────┐      ┌────────────────────────┐
-     │  Resolved Context Plan│─────►│  Runtime Truth Panel   │
-     └───────────┬───────────┘      │  (exact wire payload)  │
-                 ▼                  └────────────────────────┘
-       [ Local / Remote LLM ]`,
-    decisions: [
-      {
-        title: 'Filesystem mental model (.dirrc / .chatrc)',
-        body: 'Flat lists of chat threads break down once you use AI across real projects. Treating folders as inherited configuration scopes lets you set models, system rules, and memory access once per directory and override cleanly per chat.',
+     │  Resolved Runtime &   │─────►│  Runtime Truth Panel   │
+     │  OPFS / PWA Surface   │      │  (exact active state)  │
+     └───────────┬───────────┘      └────────────────────────┘
+                 │
+                 ▼
+     [ Ghost-Sync Pool: live fanout · async backfill · chained order ]`,
+          },
+        ],
       },
       {
-        title: 'Inspectable Runtime Truth',
-        body: 'Born directly out of WireWench and CARE: every workspace exposes what storage is mounted, whether the keyring is unlocked, which model actually answered, and what context plan was assembled.',
-      },
-      {
-        title: 'Calm, high-contrast craft (BubbleForge)',
-        body: 'Built in TypeScript and React with a Base16-driven charcoal palette and strict color namespaces designed for multi-hour technical reading without visual fatigue.',
+        heading: '// WHERE THE WORK GOES NEXT',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                lead: 'Finish Ghost-Sync end-to-end,',
+                body: 'turning the tested wire codecs, encrypted sealing, and multi-writer reconciliation into live desktop-to-phone sync.',
+              },
+              {
+                lead: 'Verify the Hermes × `.dotChat` bridge,',
+                body: 'validating live multi-turn workflows between `.dotChat` and the Chthonis agent stack.',
+              },
+              {
+                lead: 'Integrate [Neraphis](/building/neraphis)',
+                body: "on top of Ghost-Sync and [Document Processing](/doing/document-processing)'s workspace-scoped artifacts—connecting inspectable agent memory directly into the working chat environment.",
+              },
+            ],
+          },
+        ],
       },
     ],
-    demoLabel:
-      '[ SCREENSHOT / DEMO FRAME — .DOTCHAT WORKSPACE & NEGOTIATION WIRE ]',
-    related: ['/thinking/color-contract', '/doing/wirewench', '/building/neraphis'],
+    related: ['/thinking/color-contract', '/doing/turing', '/building/neraphis'],
   },
 
   '/building/guild': {
@@ -1883,7 +2063,7 @@ export const ROUTE_SUMMARIES: Record<string, RouteSummary> = {
     section: 'building',
     tag: 'BUILDING',
     title: '.dotChat — Interaction',
-    desc: 'Local-first chat workspace with inherited configs and runtime visibility.',
+    desc: 'Cascading dotfile configuration, local Vault & Keyring, Runtime Truth, and private multi-device Ghost-Sync.',
   },
   '/building/guild': {
     route: '/building/guild',
