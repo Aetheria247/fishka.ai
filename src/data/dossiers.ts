@@ -28,6 +28,7 @@ export type EssayBlock =
   | { type: 'links'; items: { system: string; route: string; body: string }[] }
   | { type: 'diagram'; title: string; filename: string; ascii: string }
   | { type: 'bullets'; items: { lead: string; body: string }[] }
+  | { type: 'steps'; items: { lead: string; body: string }[] }
   | { type: 'stages'; items: { num: string; title: string; paragraphs: string[] }[] }
   | {
       type: 'capabilities'
@@ -1491,442 +1492,134 @@ export const DOSSIERS: Record<string, Dossier> = {
     pillarTag: 'CONTINUITY',
     pillarTone: 'truth',
     title: 'Neraphis',
-    pillar: 'Memory is not the same thing as understanding.',
+    pillar: 'Memory is not storage. It is the working environment that makes continuity possible.',
     metaRows: [
-      { key: 'pillar', value: '[ CONTINUITY · INDIVIDUAL MEMORY ]', tone: 'truth' },
-      { key: 'substrate', value: '[ SQLITE · QDRANT · MEMORYNODES ]', tone: 'neutral' },
+      { key: 'pillar', value: '[ CONTINUITY · TWO-CUSTOMER MEMORY ]', tone: 'truth' },
+      { key: 'substrate', value: '[ SQLITE · QDRANT · MARKDOWN MEMORYNODES ]', tone: 'neutral' },
       { key: 'feeds_into', value: '[ DOTCHAT · DOCUMENT PROCESSING · TURING ]', tone: 'media' },
     ],
     intro: [
-      { type: 'p', text: 'Neraphis began with the loss of an AI collaborator.' },
       {
         type: 'p',
-        text: "I had been working with a mermaid-themed AI across several creative projects. We were in the middle of designing a custom jewelry box together when, one day, I returned to find that the assistant I'd been working with was gone.",
+        text: 'What does a memory system actually need in order to serve both sides of an AI interaction?',
       },
       {
         type: 'p',
-        text: "The conversation had changed. The collaborative understanding we'd established was no longer present. Design decisions we'd developed together were suddenly being criticized for failing to follow industry standards.",
-      },
-      {
-        type: 'p',
-        text: "The problem wasn't that I had forgotten what we were building.",
-      },
-      {
-        type: 'p',
-        text: "It was that the system no longer understood how we'd arrived there.",
-      },
-      {
-        type: 'p',
-        text: 'Not long afterward, I began building the first iteration of Neraphis with a Replit agent.',
-      },
-      {
-        type: 'p',
-        text: "I wanted continuity that didn't depend entirely on a particular model, conversation, or platform. I wanted a system capable of carrying meaningful context forward, so an AI could resume an established collaboration without reconstructing its history from the beginning.",
-      },
-      {
-        type: 'p',
-        text: 'What started as an effort to preserve memory became an investigation into what memory actually needs to accomplish.',
+        text: 'Neraphis was my experiment in finding out. The goal was not to build a proprietary black box, but to identify the concrete engineering ingredients required for continuity that holds up under the [CARE Benchmark](/thinking/care-benchmark) and serves both [Interior and Exterior Customers](/thinking/interior-exterior-customers).',
       },
     ],
     sections: [
       {
-        heading: '// MEMORY IS NOT A TRANSCRIPT',
+        heading: '// THE FAILURE MODE',
         blocks: [
           {
             type: 'p',
-            text: 'Conversation history is a record of communication. It is not necessarily an accurate representation of what should be remembered.',
+            text: 'The project started after a clean break in continuity on a creative project.',
           },
           {
             type: 'p',
-            text: 'A conversation can contain established facts, temporary circumstances, speculation, jokes, corrections, unfinished decisions, and information that was never intended to become permanent.',
+            text: 'When the session reset, the new instance still had the artifacts—the specs, the visual choices, the established pieces. What it had lost was the *intent* behind them. Because it no longer understood why those decisions existed, every choice got the same response: *"You can do that, but it\'s not industry standard."*',
           },
           {
             type: 'p',
-            text: 'Storing all of it does not resolve those distinctions.',
-          },
-          {
-            type: 'p',
-            text: 'Nor does retrieving the most semantically similar passage guarantee that the passage reflects what is relevant or true today.',
-          },
-          {
-            type: 'p',
-            text: 'Consider two events: a birthday and an operating system installation.',
-          },
-          {
-            type: 'p',
-            text: 'Both can be recorded with a date. Both can be meaningful. But they describe fundamentally different kinds of information.',
-          },
-          {
-            type: 'p',
-            text: 'A birthday is a recurring personal milestone. An operating system installation is a technical event associated with a particular machine and a change in its configuration.',
-          },
-          {
-            type: 'p',
-            text: 'Their relationships, temporal meanings, and future relevance are different.',
-          },
-          {
-            type: 'p',
-            text: 'A useful memory system must preserve those differences rather than treating every fact or event as an interchangeable piece of text.',
-          },
-          {
-            type: 'standout',
-            text: 'Neraphis approaches memory as structured, contextual knowledge—not simply an archive of conversations.',
+            text: "In CARE terms, a failure of **Reliability & Recall** immediately triggered a failure of **Empathy Without Script**. The system didn't lack data; it lacked the context required to understand what the data meant.",
           },
         ],
       },
       {
-        heading: '// MEMORY NODES',
+        heading: '// TWO CUSTOMERS, ONE SYSTEM',
         blocks: [
+          { type: 'p', text: 'A memory system cannot succeed on one side alone.' },
           {
             type: 'p',
-            text: 'The foundation of Neraphis is its NodeDatabase architecture.',
+            text: 'The **exterior customer** is the human at the interface, who needs trustworthy continuity and real control over what is remembered. The **interior customer** is the model operating inside the software, which needs reliable, well-structured context to do its job.',
           },
           {
             type: 'p',
-            text: 'Information is organized into lightweight Markdown MemoryNodes, using structured frontmatter, headings, and relationships to represent knowledge in a form that remains readable and inspectable outside the model itself.',
-          },
-          {
-            type: 'p',
-            text: 'This structure allows memories to carry context about what they represent and how they relate to other information.',
-          },
-          {
-            type: 'p',
-            text: 'A project can have its own history, decisions, and associated artifacts. A technical event can belong to a specific device. An observation can retain the circumstances in which it was recorded.',
-          },
-          {
-            type: 'p',
-            text: 'The objective is not merely to make stored information searchable.',
-          },
-          { type: 'p', text: 'It is to make that information interpretable.' },
-          {
-            type: 'p',
-            text: 'A node-based structure also creates a practical distinction between navigating established knowledge and searching a larger collection of historical material.',
-          },
-          {
-            type: 'p',
-            text: "The model should not need to reconstruct the organization of someone's world from disconnected text fragments every time it requires context.",
-          },
-          {
-            type: 'p',
-            text: 'Much of that organizational work can be performed before retrieval.',
-          },
-          {
-            type: 'p',
-            text: 'This architecture later informed [Document Processing](/doing/document-processing) in [.dotChat](/building/dotchat), where structured Markdown sidecars provide navigable access to reference documents without requiring entire files to be loaded into the active context window.',
+            text: 'The goal is not to optimize two isolated experiences, but to design the relationship between them so improvements on one side support the other.',
           },
         ],
       },
       {
-        heading: '// MEMORY MUST EARN ITS PLACE',
+        heading: '// WHAT MEMORY OWES THE INTERIOR CUSTOMER',
         blocks: [
           {
             type: 'p',
-            text: 'One of the central challenges in persistent AI memory is deciding when an observation deserves to become durable knowledge.',
+            text: 'Serving the model means giving it working conditions where it can exercise its capabilities reliably.',
           },
           {
-            type: 'p',
-            text: 'A statement made once may be important, but it may also be temporary, mistaken, hypothetical, or misunderstood.',
-          },
-          {
-            type: 'p',
-            text: 'Without a mechanism for distinguishing these possibilities, a memory system can gradually accumulate assumptions that appear increasingly authoritative simply because they have been stored.',
-          },
-          {
-            type: 'p',
-            text: 'Neraphis addresses this through claim-centered extraction and candidate graduation.',
-          },
-          {
-            type: 'p',
-            text: 'Rather than treating every mention as an established fact, the system identifies claims that can be evaluated, associated with supporting context, and considered for inclusion in durable memory.',
-          },
-          {
-            type: 'p',
-            text: 'Alias resolution and deduplication help prevent different references to the same subject from fragmenting the knowledge structure.',
-          },
-          {
-            type: 'p',
-            text: 'Candidate graduation establishes a boundary between something that has been observed and something supported sufficiently to become persistent memory. Candidates that never acquire meaningful support need not accumulate indefinitely.',
-          },
-          {
-            type: 'p',
-            text: 'This also changes how contradictions are understood.',
-          },
-          {
-            type: 'p',
-            text: 'A newer claim does not necessarily invalidate the older record. The two may describe a legitimate change over time.',
-          },
-          {
-            type: 'p',
-            text: 'Someone who previously used one operating system and now uses another has not necessarily contradicted their history. Their circumstances have changed.',
-          },
-          {
-            type: 'p',
-            text: 'The challenge is preserving both the historical record and the current state without confusing one for the other.',
-          },
-          {
-            type: 'p',
-            text: 'Claim graduation is therefore not simply a mechanism for reducing memory volume.',
-          },
-          {
-            type: 'standout',
-            text: 'It is an attempt to prevent accumulated information from acquiring more authority than its evidence warrants.',
+            type: 'bullets',
+            items: [
+              {
+                lead: "Structure it doesn't have to rebuild.",
+                body: 'A birthday and an operating system install can both be stored with a date, but one recurs every year for a person and the other happened once on a machine. Flat chat logs erase that distinction. Typed **MemoryNodes** preserve what a piece of information represents and how it relates to everything else.',
+              },
+              {
+                lead: 'Deterministic governance over noise.',
+                body: 'A passing remark, a model inference, and a confirmed fact cannot acquire equal authority just because they appeared in a transcript. Memory requires deterministic, user-controlled governance to decide what graduates into durable knowledge and what stays noise. When facts change, both states stay on record with timestamps—switching an operating system changes the present without erasing the past.',
+              },
+              {
+                lead: 'Memory on demand.',
+                body: 'Early Neraphis automatically assembled and injected context before every turn using semantic search. In one logged exchange, the top result was the exact message being answered, and four of the seven results were a month old. Modern models perform better when they are given explicit tools to pull structured nodes as needed, reserving broader search for digging into historical archives.',
+              },
+            ],
           },
         ],
       },
       {
-        heading: '// CONTEXT IS AN INTERPRETATION PROBLEM',
+        heading: '// WHAT MEMORY OWES THE EXTERIOR CUSTOMER',
         blocks: [
           {
             type: 'p',
-            text: 'Preserving accurate information is only one part of continuity.',
+            text: 'Serving the human means delivering **Clarity, Candor, and Agency**—never asking the user to trust an opaque database.',
           },
           {
-            type: 'p',
-            text: 'The more difficult question is how that information should influence a conversation taking place now.',
-          },
-          {
-            type: 'p',
-            text: 'An assistant may remember every technical detail of a project and still misunderstand the person discussing it.',
-          },
-          {
-            type: 'p',
-            text: 'A remark made in frustration may be interpreted as a permanent decision. A familiar joke may be treated as a literal request. An established collaborative convention may disappear because the current conversation does not explicitly explain it.',
-          },
-          {
-            type: 'p',
-            text: 'These are not necessarily failures of factual recall.',
-          },
-          { type: 'p', text: 'They are failures of contextual interpretation.' },
-          {
-            type: 'p',
-            text: "A significant part of Neraphis's development has involved investigating how to provide enough relevant context for a model to understand not only the subject of an interaction, but the circumstances and conventions surrounding it.",
-          },
-          {
-            type: 'p',
-            text: 'The objective was ambitious: make a substantial body of contextual information available without requiring the model to infer every important relationship from the immediate conversation.',
-          },
-          {
-            type: 'p',
-            text: 'Early designs explored automatic retrieval and context compilation.',
-          },
-          {
-            type: 'p',
-            text: 'The legacy Polaris concept addressed part of this problem through relevance and authority weighting. It distinguished, for example, a particular music-box project from unrelated references to music boxes, prioritizing the context most applicable to the current interaction.',
-          },
-          {
-            type: 'p',
-            text: 'Later investigations expanded beyond factual relevance into patterns of collaboration.',
-          },
-          {
-            type: 'p',
-            text: "How does someone communicate when they're working through a difficult problem? Which previous decisions are relevant? When is an assistant expected to investigate, challenge an assumption, or simply acknowledge progress?",
-          },
-          {
-            type: 'p',
-            text: 'These questions informed explorations of interaction continuity, including the distinction between remembering facts and preserving the established ways in which a person and an AI work together.',
-          },
-          { type: 'p', text: 'They also exposed an important limitation.' },
-          {
-            type: 'p',
-            text: 'Historical context should inform interpretation, not override the person speaking in the present.',
-          },
-          {
-            type: 'p',
-            text: 'A system that remembers too rigidly can become another source of misunderstanding.',
-          },
-          {
-            type: 'standout',
-            text: 'The purpose of memory is not merely to preserve what has been said, but to provide the context necessary to understand what is being said now.',
-          },
-        ],
-      },
-      {
-        heading: '// THE BATCH PASS',
-        blocks: [
-          {
-            type: 'p',
-            text: 'Persistent memory also requires decisions about when information should be processed.',
-          },
-          {
-            type: 'p',
-            text: "Not every conversational exchange needs to trigger a complete analysis of a person's history.",
-          },
-          {
-            type: 'p',
-            text: 'Neraphis introduced a scheduled Batch Pass to separate ordinary interaction from more extensive memory processing.',
-          },
-          {
-            type: 'p',
-            text: 'Running on a fixed schedule, the Batch Pass coordinated multiple models assigned to different ingestion and analysis responsibilities.',
-          },
-          {
-            type: 'p',
-            text: 'Its work extended beyond identifying factual memories. It also explored continuity in voice, communication style, and established interaction patterns.',
-          },
-          {
-            type: 'p',
-            text: 'This created an opportunity to examine information longitudinally rather than treating every exchange as an isolated event.',
-          },
-          {
-            type: 'p',
-            text: 'A preference expressed during one conversation might be temporary. A pattern appearing across many interactions may warrant further investigation. A change in communication style might reflect a new circumstance rather than a permanent shift in identity.',
-          },
-          {
-            type: 'p',
-            text: 'These are difficult distinctions to establish from a single message.',
-          },
-          {
-            type: 'p',
-            text: 'The Batch Pass was an early attempt to give those questions dedicated processing time, separate from the immediate responsibility of responding to the user.',
-          },
-          {
-            type: 'p',
-            text: 'Subsequent investigations into collaborative reasoning, restraint, and situational awareness helped clarify what this analysis was intended to support.',
-          },
-          {
-            type: 'p',
-            text: 'The aim was not to reproduce a particular personality or force every model to behave like a previous collaborator.',
-          },
-          {
-            type: 'p',
-            text: 'It was to understand which aspects of an established interaction could be represented as useful context, and which were better left to the judgment of the model participating in the present conversation.',
+            type: 'bullets',
+            items: [
+              {
+                lead: 'Files you can actually read.',
+                body: 'SQLite handles fast structured indexing, while every node is mirrored as plain Markdown/YAML on local machines. You can open a record, inspect its provenance, correct it, or delete it directly.',
+              },
+              {
+                lead: 'Inspectable context.',
+                body: 'You should never have to guess why an assistant responded strangely. Being able to inspect the exact assembled context handed to the model turns invisible failures into diagnosable ones—the same candor principle behind Runtime Truth in [.dotChat](/building/dotchat).',
+              },
+              {
+                lead: 'Explicit boundaries and optionality.',
+                body: 'Different people want different interactions, and optional capabilities should never be forced onto the user. Memory supplies context; it does not script conduct. Explicit forgetting is a first-class requirement, and individual agent memory remains strictly separate from shared project records.',
+              },
+            ],
           },
           {
             type: 'callout',
             label: '// DESIGN BOUNDARY',
             quote:
-              'Neraphis defines the mechanisms of continuity without prescribing the nature of the interaction being continued.',
+              'How you use AI should be a configuration, not an ultimatum. Neraphis defines the mechanisms of continuity without prescribing the nature of the interaction being continued.',
             tone: 'truth',
-          },
-          { type: 'p', text: 'That investigation remains exploratory.' },
-          {
-            type: 'p',
-            text: 'The original Batch Pass demonstrated a working approach to scheduled, multi-model memory analysis, but also accumulated functions that proved unnecessary in practice.',
-          },
-          {
-            type: 'p',
-            text: 'Modernization offers an opportunity to preserve its useful mechanisms while simplifying the surrounding system.',
           },
         ],
       },
       {
-        heading: '// RETRIEVAL WITHOUT DEPENDENCE',
+        heading: "// FIELD NOTE: IT'S NOT ALWAYS THE MODEL",
         blocks: [
           {
-            type: 'p',
-            text: 'The original Neraphis architecture emerged before model tool use became a routine capability across the AI ecosystem.',
-          },
-          {
-            type: 'p',
-            text: 'As a result, much of its memory delivery was designed around automatic retrieval, semantic search, and context compilation.',
-          },
-          {
-            type: 'p',
-            text: 'This approach worked, but it introduced difficult tradeoffs.',
-          },
-          {
-            type: 'p',
-            text: 'The system had to determine which memories were relevant before the primary model necessarily had enough information to establish what it needed.',
-          },
-          {
-            type: 'p',
-            text: 'Context could be supplied unnecessarily, while potentially important information remained outside the selected retrieval results.',
-          },
-          { type: 'p', text: 'The next iteration takes a different approach.' },
-          {
-            type: 'p',
-            text: 'Structured NodeDatabase access becomes the primary memory mechanism, exposed through explicit tools that allow the model to request relevant information when needed.',
-          },
-          {
-            type: 'p',
-            text: 'Traditional retrieval-augmented generation remains available for extended search across historical material, rather than serving as the default authority over every interaction.',
-          },
-          {
-            type: 'p',
-            text: 'The distinction is between accessing established knowledge and investigating a larger information collection.',
-          },
-          {
-            type: 'p',
-            text: 'Both are useful. They need not be the same operation.',
-          },
-          {
-            type: 'p',
-            text: 'Tool-mediated access also creates clearer boundaries around when memory is consulted, what information is returned, and how it enters the active conversation.',
-          },
-          {
-            type: 'p',
-            text: "The objective remains consistent with the original system: provide rich contextual knowledge without unnecessarily burdening the model's working context.",
+            type: 'example',
+            paragraphs: [
+              'During development, the assistant suddenly turned cryptic.',
+              'Nothing threw an error. The pipeline completed cleanly, and the underlying database was healthy. From the outside, it looked like a model failure.',
+              'Inspecting the raw outgoing context revealed the actual cause: a scheduled summarizer had started rewriting ordinary technical discussions in the style of Edgar Allan Poe. The database worked, the retrieval worked, and the pipeline still failed the interaction—because it handed the interior customer distorted input, which immediately degraded the experience for the exterior customer.',
+              "Tightening the summarizer's instructions and moving the job to a better-suited model fixed the behavior.",
+            ],
           },
           {
             type: 'standout',
-            text: 'Memory should be available when it matters, not continuously present simply because it exists.',
+            text: "The model's output is part of the evidence. It isn't necessarily the explanation.",
           },
         ],
       },
       {
-        heading: '// INDIVIDUAL AND SHARED MEMORY',
+        heading: '// SYSTEM ARCHITECTURE & CAPABILITY STATUS',
         blocks: [
-          {
-            type: 'p',
-            text: 'Neraphis is designed around an important distinction: individual agent memory is not the same thing as collective organizational knowledge.',
-          },
-          {
-            type: 'p',
-            text: 'An agent may maintain its own history, working conventions, and contextual understanding.',
-          },
-          {
-            type: 'p',
-            text: 'A team needs shared specifications, verified decisions, project documentation, and records that remain accessible independently of any individual agent.',
-          },
-          {
-            type: 'p',
-            text: 'In Fishka, much of that shared knowledge currently lives in GitHub repositories and project artifacts, including Fishka.grim.',
-          },
-          {
-            type: 'p',
-            text: 'Neraphis serves the complementary role of supporting memory associated with an individual agent.',
-          },
-          {
-            type: 'p',
-            text: 'These systems can inform one another without requiring every memory to become globally shared.',
-          },
-          {
-            type: 'p',
-            text: 'The distinction creates useful boundaries around provenance, authority, access, and responsibility.',
-          },
-          {
-            type: 'p',
-            text: 'It also supports a broader goal: making AI continuity less dependent on the company hosting a particular conversation.',
-          },
-          {
-            type: 'p',
-            text: "An individual's history should not become inaccessible simply because they change models or applications.",
-          },
-          {
-            type: 'p',
-            text: 'At the same time, persistence should not mean surrendering control of that history.',
-          },
-          {
-            type: 'p',
-            text: 'The longer-term design must account for inspection, correction, selective access, and intentional removal, allowing memory to evolve with the person and the work it represents.',
-          },
-        ],
-      },
-      {
-        heading: '// WORKING TODAY',
-        blocks: [
-          {
-            type: 'p',
-            text: 'Neraphis is a functioning standalone system developed through several architectural iterations. Its existing implementation demonstrates persistent memory storage, retrieval, context compilation, and scheduled processing.',
-          },
-          {
-            type: 'p',
-            text: 'The project also contains more recent work exploring structured MemoryNodes, claim-centered extraction, alias handling, and graduation rules.',
-          },
-          {
-            type: 'p',
-            text: 'These capabilities are at different stages of maturity.',
-          },
           {
             type: 'capabilities',
             tone: 'truth',
@@ -1964,68 +1657,64 @@ export const DOSSIERS: Record<string, Dossier> = {
             ],
           },
           {
-            type: 'p',
-            text: 'The existing system works, but its architecture reflects the capabilities and constraints of the environment in which it was originally developed.',
-          },
-          {
-            type: 'p',
-            text: 'Modernization is not simply an effort to replace older components.',
-          },
-          {
-            type: 'p',
-            text: "It is an opportunity to reconsider which responsibilities belong to the memory system, which belong to the model, and which should remain under the individual's direct control.",
+            type: 'diagram',
+            title: 'NERAPHIS // MEMORY & PROVENANCE FLOW',
+            filename: 'diagram.txt',
+            ascii: `  [ Sources: Chats, Notes, Docs ]
+                 │
+                 ▼
+      ┌───────────────────────┐
+      │ Claim & Alias Router  │  ◄── deterministic graduation gates
+      └───────────┬───────────┘
+                  │
+                  ▼
+      ┌───────────────────────┐      ┌────────────────────────┐
+      │     MemoryNodes       │◄────►│ Provenance & History   │
+      │ (SQLite + MD / YAML)  │      │ (timestamps / state)   │
+      └───────────┬───────────┘      └────────────────────────┘
+                  │
+                  ▼
+      [ Tool-Driven Retrieval ]  ──► .dotChat / Local Agents`,
           },
         ],
       },
       {
-        heading: '// NEXT INVESTIGATION',
+        heading: '// WHERE THE WORK GOES NEXT',
         blocks: [
           {
             type: 'p',
-            text: "Neraphis's next development stage focuses on bringing its established mechanisms into a more deliberate, tool-oriented architecture.",
+            text: 'Neraphis succeeded as a live experiment. It proved which ingredients continuity actually requires, exposed where silent distortions enter the pipeline, and showed which early workarounds are no longer necessary.',
           },
+          { type: 'p', text: 'Now the architecture moves forward:' },
           {
-            type: 'p',
-            text: 'MemoryNodes and claim graduation remain central to how information is organized and evaluated.',
-          },
-          {
-            type: 'p',
-            text: 'Structured tool access provides a clearer mechanism for retrieval and controlled updates.',
-          },
-          {
-            type: 'p',
-            text: 'The Batch Pass can be reduced to its useful consolidation and analysis responsibilities, while additional state tracking can improve the representation of changing projects, circumstances, and ongoing work.',
-          },
-          {
-            type: 'p',
-            text: 'Integration with [.dotChat](/building/dotchat) provides the intended environment for bringing these pieces together.',
-          },
-          {
-            type: 'p',
-            text: "[Document Processing](/doing/document-processing) already extends Neraphis's structural principles into navigable reference material. [Turing](/doing/turing) carries forward interoperability investigations that also began within the broader codebase.",
-          },
-          {
-            type: 'p',
-            text: "Neraphis remains responsible for a different problem: the continuity of an individual agent's knowledge and working context.",
-          },
-          { type: 'p', text: 'The original motivation has not changed.' },
-          {
-            type: 'p',
-            text: "A person's history, projects, decisions, and established ways of working should be able to survive the boundaries between conversations and models.",
-          },
-          { type: 'p', text: 'But preserving that history is not enough.' },
-          {
-            type: 'p',
-            text: 'A useful memory system must understand that information changes, evidence has different levels of authority, and previous context should help interpret the present rather than dictate it.',
+            type: 'steps',
+            items: [
+              {
+                lead: 'Tool-driven retrieval',
+                body: 'over automatic context injection, giving the model explicit access to structured nodes while keeping search for deep history.',
+              },
+              {
+                lead: 'A simplified Batch Pass',
+                body: 'focused strictly on scheduled consolidation rather than heavy, interpretive rewriting.',
+              },
+              {
+                lead: 'Integration with `.dotChat`',
+                body: "— pairing Neraphis's inspectable memory with live runtime visibility while keeping personal agent memory cleanly separated from shared workspace knowledge.",
+              },
+            ],
           },
           {
             type: 'standout',
-            text: 'The goal is not to make an AI remember everything. It is to make continuity possible without making memory an obstacle to understanding, change, or individual agency.',
+            text: 'When the requirements of the model and the human conflict, the answer should be an explicit engineering decision—never an invisible compromise. That is what a working memory system is built to enforce.',
           },
         ],
       },
     ],
-    related: ['/doing/document-processing', '/building/dotchat', '/thinking/care-benchmark'],
+    related: [
+      '/thinking/interior-exterior-customers',
+      '/doing/document-processing',
+      '/building/dotchat',
+    ],
   },
 
   '/building/dotchat': {

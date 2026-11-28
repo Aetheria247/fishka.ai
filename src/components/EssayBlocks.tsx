@@ -127,6 +127,24 @@ export function EssayBlocks({ blocks, onNavigate }: EssayBlocksProps) {
           )
         }
 
+        if (block.type === 'steps') {
+          return (
+            <ol key={`steps-${idx}`} className="step-list essay-links">
+              {block.items.map((item, sIdx) => (
+                <li key={item.lead} className="step-item">
+                  <span className="step-num">0{sIdx + 1}</span>
+                  <span>
+                    <strong>
+                      <RichText text={item.lead} onNavigate={onNavigate} />
+                    </strong>{' '}
+                    <RichText text={item.body} onNavigate={onNavigate} />
+                  </span>
+                </li>
+              ))}
+            </ol>
+          )
+        }
+
         if (block.type === 'stages') {
           return (
             <div key={`stages-${idx}`} className="card-stack essay-links">
