@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react'
 import { statusToneFor, type EssayBlock } from '../data/dossiers'
+import { NegotiationWireDemo } from './NegotiationWireDemo'
 import { RichText } from './RichText'
 
 interface EssayBlocksProps {
@@ -43,10 +44,23 @@ export function EssayBlocks({ blocks, onNavigate }: EssayBlocksProps) {
               {block.label ? (
                 <div className={`law-discipline tone-${tone}`}>{block.label}</div>
               ) : null}
-              <p className="law-quote">“{block.quote}”</p>
+              {block.quote ? <p className="law-quote">“{block.quote}”</p> : null}
+              {block.paragraphs ? (
+                <div className="law-body">
+                  {block.paragraphs.map((para, pIdx) => (
+                    <p key={pIdx} className="law-p">
+                      <RichText text={para} onNavigate={onNavigate} />
+                    </p>
+                  ))}
+                </div>
+              ) : null}
               {block.sub ? <p className="law-sub">{block.sub}</p> : null}
             </blockquote>
           )
+        }
+
+        if (block.type === 'negotiation-wire') {
+          return <NegotiationWireDemo key={`nw-${idx}`} />
         }
 
         if (block.type === 'grid') {

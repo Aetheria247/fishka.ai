@@ -23,7 +23,15 @@ export interface MetaRow {
 export type EssayBlock =
   | { type: 'p'; text: string }
   | { type: 'standout'; text: string }
-  | { type: 'callout'; label?: string; quote: string; sub?: string; tone?: SemanticTone }
+  | {
+      type: 'callout'
+      label?: string
+      quote?: string
+      paragraphs?: string[]
+      sub?: string
+      tone?: SemanticTone
+    }
+  | { type: 'negotiation-wire' }
   | { type: 'grid'; items: { num: string; title: string; body: string }[] }
   | { type: 'example'; paragraphs: string[] }
   | { type: 'links'; items: { system: string; route: string; body: string }[] }
@@ -1812,6 +1820,16 @@ export const DOSSIERS: Record<string, Dossier> = {
               },
             ],
           },
+          {
+            type: 'callout',
+            label: '// NEGOTIATION WIRE',
+            tone: 'wire',
+            paragraphs: [
+              '`.dotChat` ships with a lightweight, read-only diagnostic layer called the **Negotiation Wire**—a first-stage integration of [WireWench](/doing/wirewench) directly inside the chat surface. As turns arrive, it quietly compares what the provider promised against what actually crossed the wire, tracking silent discrepancies like missing reasoning blocks.',
+              'When the disagreement rate for a given gateway, model, and upstream route crosses the 15% threshold, `.dotChat` flags the drift and recommends running [Turing](/doing/turing) calibration to probe the dialect envelope and repair the connection—before a silent routing mismatch ever looks like a model failure.',
+            ],
+          },
+          { type: 'negotiation-wire' },
         ],
       },
       {
