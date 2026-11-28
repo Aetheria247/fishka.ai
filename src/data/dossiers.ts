@@ -32,6 +32,7 @@ export type EssayBlock =
       tone?: SemanticTone
     }
   | { type: 'negotiation-wire' }
+  | { type: 'context-cascade' }
   | { type: 'grid'; items: { num: string; title: string; body: string }[] }
   | { type: 'example'; paragraphs: string[] }
   | { type: 'links'; items: { system: string; route: string; body: string }[] }
@@ -1772,6 +1773,7 @@ export const DOSSIERS: Record<string, Dossier> = {
             type: 'p',
             text: "Control only counts when you can see what the system did with it. To deliver [CARE](/thinking/care-benchmark)'s **Clarity & Candor**, every resolved setting carries source attribution (**Anti-Mystery Inheritance**). Overridden values light up in Core Pink under the [Color Contract](/thinking/color-contract), backed by a live **Runtime Truth** panel showing the exact configuration governing the current turn.",
           },
+          { type: 'context-cascade' },
         ],
       },
       {

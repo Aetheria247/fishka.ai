@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react'
 import { statusToneFor, type EssayBlock } from '../data/dossiers'
+import { ContextCascadeDemo } from './ContextCascadeDemo'
 import { NegotiationWireDemo } from './NegotiationWireDemo'
 import { RichText } from './RichText'
 
@@ -61,6 +62,10 @@ export function EssayBlocks({ blocks, onNavigate }: EssayBlocksProps) {
 
         if (block.type === 'negotiation-wire') {
           return <NegotiationWireDemo key={`nw-${idx}`} />
+        }
+
+        if (block.type === 'context-cascade') {
+          return <ContextCascadeDemo key={`cc-${idx}`} />
         }
 
         if (block.type === 'grid') {
